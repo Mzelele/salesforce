@@ -1,0 +1,53 @@
+"use client";
+
+import clsx from "clsx";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+export function Breadcrumbs({ items, verticalOnMobile = false, centerOnMobile = false }: { items: Crumb[]; verticalOnMobile?: boolean; centerOnMobile?: boolean }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      item: item.href ? `https://watchesinkenya.co.ke${item.href}` : undefined,
+    })),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <nav aria-label="Breadcrumb" className="py-1">
+        <ol className={clsx("flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400", centerOnMobile ? "justify-center sm:justify-start" : "justify-start", verticalOnMobile ? "flex-col sm:flex-row sm:flex-wrap" : "flex-wrap")}>
+          {items.map((item, index) => (
+            <li key={index} className="flex items-center gap-1">
+              {index > 0 && (
+                <ChevronRight className={clsx("h-4 w-4 text-neutral-400 dark:text-neutral-600", verticalOnMobile && "hidden sm:block")} />
+              )}
+              {item.href && index < items.length - 1 ? (
+                <Link
+                  href={item.href}
+                  className="max-w-[80px] truncate hover:text-black hover:underline sm:max-w-none sm:whitespace-normal dark:hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span className="max-w-[100px] truncate text-black sm:max-w-none sm:whitespace-normal dark:text-white">{item.label}</span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
+  );
+}
