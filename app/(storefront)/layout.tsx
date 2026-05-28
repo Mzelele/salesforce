@@ -9,6 +9,8 @@ import { getStoreSettings, ScriptSnippet } from "lib/storefront/settings";
 import Script from "next/script";
 import { ReactNode } from "react";
 
+export const dynamic = "force-dynamic";
+
 function getRenderedCode(script: ScriptSnippet): string {
   if (script.type === "js") return `<script>${script.code}</script>`;
   if (script.type === "css") return `<style>${script.code}</style>`;
