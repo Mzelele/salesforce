@@ -7,6 +7,8 @@ import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
