@@ -24,7 +24,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
   if (images.length === 0) return null;
 
   return (
-    <div className="relative mt-4 aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-100 md:aspect-[2/1]">
+    <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-xl bg-neutral-100">
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${activeIndex * 100}%)` }}

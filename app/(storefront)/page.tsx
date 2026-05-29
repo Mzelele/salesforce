@@ -1,6 +1,6 @@
 import { BrandCarousel } from "components/layout/brand-carousel";
 import CategorySections from "components/layout/category-sections";
-import { HeroBanner } from "components/layout/hero-banner";
+import { HeroSection } from "components/layout/hero-section";
 import { getBrands } from "lib/storefront/brands";
 import { getAllCategories } from "lib/storefront/categories";
 import { getProducts } from "lib/storefront/products";
@@ -57,7 +57,9 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroBanner />
+      <HeroSection
+        categories={categories.map((c) => ({ slug: c.handle, title: c.title }))}
+      />
       <BrandCarousel brands={brands} />
       <CategorySections
         categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title }))}
