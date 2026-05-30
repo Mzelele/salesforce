@@ -18,6 +18,7 @@ export type Collection = {
   seo: SEO;
   updatedAt: string;
   path: string;
+  emoji?: string;
 };
 
 export type SalesforceProduct = {

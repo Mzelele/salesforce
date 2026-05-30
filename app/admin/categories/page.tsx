@@ -21,6 +21,7 @@ interface Category {
   slug: string;
   description?: string;
   image?: string;
+  emoji?: string;
   parent?: { _id: string; name: string } | null;
   deletedAt?: string;
 }
@@ -35,6 +36,7 @@ export default function CategoriesPage() {
     slug: "",
     description: "",
     image: "",
+    emoji: "",
     parent: "none",
   });
 
@@ -83,7 +85,7 @@ export default function CategoriesPage() {
 
     if (res.ok) {
       toast.success(editingId ? "Category updated" : "Category created");
-      setForm({ name: "", slug: "", description: "", image: "", parent: "none" });
+      setForm({ name: "", slug: "", description: "", image: "", emoji: "", parent: "none" });
       setEditingId(null);
       fetchCategories();
     } else {
@@ -99,6 +101,7 @@ export default function CategoriesPage() {
       slug: cat.slug,
       description: cat.description || "",
       image: cat.image || "",
+      emoji: cat.emoji || "",
       parent: cat.parent?._id?.toString() || "none",
     });
   };
@@ -148,13 +151,22 @@ export default function CategoriesPage() {
         <h3 className="mb-3 font-semibold">
           {editingId ? "Edit Category" : "Add Category"}
         </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <Label>Name</Label>
             <Input
               value={form.name}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="Category name"
+            />
+          </div>
+          <div>
+            <Label>Emoji</Label>
+            <Input
+              value={form.emoji}
+              onChange={(e) => setForm((p) => ({ ...p, emoji: e.target.value }))}
+              placeholder="e.g., ⌚"
+              maxLength={2}
             />
           </div>
           <div>
@@ -210,7 +222,7 @@ export default function CategoriesPage() {
               variant="outline"
               onClick={() => {
                 setEditingId(null);
-                setForm({ name: "", slug: "", description: "", image: "", parent: "none" });
+                setForm({ name: "", slug: "", description: "", image: "", emoji: "", parent: "none" });
               }}
             >
               Cancel
@@ -224,6 +236,7 @@ export default function CategoriesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
+                <th className="px-4 py-3 text-left font-medium">Emoji</th>
                 <th className="px-4 py-3 text-left font-medium">Name</th>
                 <th className="px-4 py-3 text-left font-medium">Slug</th>
                 <th className="px-4 py-3 text-left font-medium">Parent</th>
@@ -234,6 +247,7 @@ export default function CategoriesPage() {
               {loading ? (
                 Array.from({ length: 3 }).map((_, i) => (
                   <tr key={i}>
+                    <td className="px-4 py-3"><Skeleton className="h-4 w-6" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
                     <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
@@ -246,6 +260,7 @@ export default function CategoriesPage() {
                     key={cat._id}
                     className={`border-b border-neutral-100 dark:border-neutral-800 ${cat.deletedAt ? "opacity-50" : ""}`}
                   >
+                    <td className="px-4 py-3 text-lg">{cat.emoji || "—"}</td>
                     <td className="px-4 py-3 font-medium">
                       {cat.name}
                       {cat.deletedAt && (
@@ -271,7 +286,7 @@ export default function CategoriesPage() {
               )}
               {!loading && categories.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-neutral-500">
+                  <td colSpan={5} className="py-8 text-center text-neutral-500">
                     No categories found
                   </td>
                 </tr>

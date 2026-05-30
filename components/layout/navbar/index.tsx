@@ -41,13 +41,10 @@ function WhatsAppNavButton({ phone }: { phone?: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="hidden items-center gap-2 rounded-full bg-green-600 px-4 py-2 text-white hover:bg-green-700 md:flex"
+      className="hidden items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-white transition-all hover:bg-green-700 hover:shadow-lg md:flex"
     >
       <WhatsAppIcon className="h-5 w-5 shrink-0" />
-      <div className="flex flex-col leading-tight">
-        <span className="text-xs font-semibold">Ask on WhatsApp</span>
-        <span className="text-[10px] opacity-90">Call/WhatsApp: {formattedPhone}</span>
-      </div>
+      <span className="text-sm font-semibold">WhatsApp Order</span>
     </a>
   );
 }

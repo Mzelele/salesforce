@@ -42,7 +42,7 @@ export async function HeroBanner() {
   return (
     <section className="mb-4">
       <div
-        className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl px-6 py-10 text-center sm:px-8 sm:py-14 md:px-10 md:py-18"
+        className="relative flex flex-col items-center justify-center overflow-hidden rounded-2xl px-6 py-10 text-center sm:px-8 sm:py-14 md:px-10 md:py-18 border border-neutral-200 shadow-sm dark:border-neutral-800"
         style={{ backgroundColor: bgColor }}
       >
         {/* Gradient overlay */}
