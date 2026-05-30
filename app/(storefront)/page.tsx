@@ -1,34 +1,63 @@
 import { BrandCarousel } from "components/layout/brand-carousel";
+import { CategoryCircles } from "components/layout/category-circles";
 import CategorySections from "components/layout/category-sections";
 import { HeroSection } from "components/layout/hero-section";
 import { getBrands } from "lib/storefront/brands";
 import { getAllCategories } from "lib/storefront/categories";
 import { getProducts } from "lib/storefront/products";
+import { getStoreSettings } from "lib/storefront/settings";
 import { baseUrl } from "lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
-  description:
-    "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.",
-  alternates: {
-    canonical: `${baseUrl}/`,
-  },
-  openGraph: {
-    type: "website",
-    title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
-    description:
-      "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.",
-    url: baseUrl,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
-    description:
-      "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide.",
-  },
-};
+export async function generateMetadata() {
+  try {
+    const settings = await getStoreSettings();
+    const title = settings.metaTitle || settings.storeName || "Watches in Kenya";
+    const description = settings.metaDescription || "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.";
+    
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `${baseUrl}/`,
+      },
+      openGraph: {
+        type: "website",
+        title,
+        description,
+        url: baseUrl,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+      },
+    };
+  } catch {
+    return {
+      title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
+      description:
+        "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.",
+      alternates: {
+        canonical: `${baseUrl}/`,
+      },
+      openGraph: {
+        type: "website",
+        title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
+        description:
+          "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.",
+        url: baseUrl,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "Shop Premium Watches in Kenya | Authentic Brands, Fast Delivery",
+        description:
+          "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide.",
+      },
+    };
+  }
+}
 
 export default async function HomePage() {
   const [categories, rawBrands] = await Promise.all([getAllCategories(), getBrands()]);
@@ -58,13 +87,16 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection
-        categories={categories.map((c) => ({ slug: c.handle, title: c.title }))}
+        categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
       />
-      <BrandCarousel brands={brands} />
+      <CategoryCircles
+        categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
+      />
       <CategorySections
         categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title }))}
         initialData={initialData}
       />
+      {brands.length > 0 && <BrandCarousel brands={brands} />}
     </>
   );
 }
