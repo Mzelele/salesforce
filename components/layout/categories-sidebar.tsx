@@ -1,21 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import {
-  Smartphone,
-  Tv,
-  Home,
-  CookingPot,
-  Scissors,
-  ShoppingBasket,
-  Speaker,
-  Plug,
-  Armchair,
-  Watch,
-  Gamepad2,
-  Monitor,
-  ChevronRight,
+    Armchair,
+    ChevronRight,
+    CookingPot,
+    Gamepad2,
+    Home,
+    Monitor,
+    Plug,
+    Scissors,
+    ShoppingBasket,
+    Smartphone,
+    Speaker,
+    Tv,
+    Watch,
 } from "lucide-react";
+import Link from "next/link";
 
 const iconMap: Record<string, React.ReactNode> = {
   smartphones: <Smartphone className="h-4 w-4" />,
@@ -44,28 +44,28 @@ function getIcon(title: string) {
 export function CategoriesSidebar({
   categories,
 }: {
-  categories: { slug: string; title: string }[];
+  categories: { slug: string; title: string; emoji?: string }[];
 }) {
   return (
     <div className="hidden lg:block">
-      <div className="rounded-xl bg-white dark:bg-neutral-900 overflow-hidden border border-neutral-200 dark:border-neutral-800">
-        <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
-          <h3 className="font-semibold text-sm uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
+      <div className="rounded-2xl bg-white overflow-hidden border border-neutral-200 h-full flex flex-col shadow-sm">
+        <div className="px-4 py-3 border-b border-neutral-200 shrink-0">
+          <h3 className="font-semibold text-sm uppercase tracking-wide text-neutral-900">
             Categories
           </h3>
         </div>
-        <ul className="divide-y divide-neutral-100 dark:divide-neutral-800">
+        <ul className="divide-y divide-neutral-200 overflow-y-auto">
           {categories.slice(0, 12).map((cat) => (
             <li key={cat.slug}>
               <Link
                 href={`/category/${cat.slug}`}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors group"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors group"
               >
-                <span className="text-neutral-400 group-hover:text-teal-600 transition-colors">
-                  {getIcon(cat.title)}
+                <span className="text-lg">
+                  {cat.emoji || "📦"}
                 </span>
-                <span className="flex-1 truncate">{cat.title}</span>
-                <ChevronRight className="h-3.5 w-3.5 text-neutral-300 group-hover:text-teal-600 transition-colors shrink-0" />
+                <span className="flex-1 truncate text-neutral-900">{cat.title}</span>
+                <ChevronRight className="h-3.5 w-3.5 text-neutral-400 group-hover:text-blue-600 transition-colors shrink-0" />
               </Link>
             </li>
           ))}

@@ -89,9 +89,11 @@ export default async function HomePage() {
       <HeroSection
         categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
       />
-      <CategoryCircles
-        categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
-      />
+      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
+        <CategoryCircles
+          categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
+        />
+      </div>
       <CategorySections
         categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title }))}
         initialData={initialData}

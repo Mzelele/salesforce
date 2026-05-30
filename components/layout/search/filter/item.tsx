@@ -18,11 +18,11 @@ function PathFilterItem({ item }: { item: PathFilterItem }) {
   newParams.delete("q");
 
   return (
-    <li className="flex text-black dark:text-white" key={item.title}>
+    <li className="flex text-neutral-900" key={item.title}>
       <DynamicTag
         href={createUrl(item.path, newParams)}
         className={clsx(
-          "w-full rounded-md px-2 py-1.5 text-sm underline-offset-4 hover:bg-neutral-100 hover:underline dark:hover:bg-neutral-900 dark:hover:text-neutral-100",
+          "w-full rounded-md px-2 py-1.5 text-sm underline-offset-4 hover:bg-neutral-100 hover:underline",
           {
             "underline underline-offset-4": active,
           },
@@ -51,13 +51,13 @@ function SortFilterItem({ item }: { item: SortFilterItem }) {
 
   return (
     <li
-      className="flex text-sm text-black dark:text-white"
+      className="flex text-sm text-neutral-900"
       key={item.title}
     >
       <DynamicTag
         prefetch={!active ? false : undefined}
         href={href}
-        className={clsx("w-full rounded-md px-2 py-1.5 hover:bg-neutral-100 hover:underline hover:underline-offset-4 dark:hover:bg-neutral-900", {
+        className={clsx("w-full rounded-md px-2 py-1.5 hover:bg-neutral-100 hover:underline hover:underline-offset-4", {
           "underline underline-offset-4": active,
         })}
       >

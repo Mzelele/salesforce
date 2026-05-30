@@ -136,38 +136,38 @@ export function ProductActions({
 
       {/* Trust badges */}
       <div className="mt-2 space-y-1 md:mt-8 md:space-y-1.5">
-        <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-2.5 py-2 dark:border-green-900 dark:bg-green-950/30">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400">
+        <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-2.5 py-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
             <BanknotesIcon className="h-3 w-3" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-green-800 dark:text-green-300">Cash on Delivery</p>
-            <p className="text-[11px] text-green-700/80 dark:text-green-400/80">Pay when you receive your order</p>
+            <p className="text-xs font-semibold text-green-800">Cash on Delivery</p>
+            <p className="text-[11px] text-green-700/80">Pay when you receive your order</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2 dark:border-blue-900 dark:bg-blue-950/30">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-400">
+        <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700">
             <TruckIcon className="h-3 w-3" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-blue-800 dark:text-blue-300">Cheap Delivery Rates</p>
-            <p className="text-[11px] text-blue-700/80 dark:text-blue-400/80">KES 190 parcels · KES 250 Nairobi · FREE CBD</p>
+            <p className="text-xs font-semibold text-blue-800">Cheap Delivery Rates</p>
+            <p className="text-[11px] text-blue-700/80">KES 190 parcels · KES 250 Nairobi · FREE CBD</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-2.5 py-2 dark:border-neutral-700 dark:bg-neutral-900/50">
-          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
+        <div className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-2.5 py-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-700">
             <MapPinIcon className="h-3 w-3" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-300">Fast Local Shipping</p>
-            <p className="text-[11px] text-neutral-600 dark:text-neutral-400">Delivered within Nairobi & across Kenya</p>
+            <p className="text-xs font-semibold text-neutral-800">Fast Local Shipping</p>
+            <p className="text-[11px] text-neutral-600">Delivered within Nairobi & across Kenya</p>
           </div>
         </div>
       </div>
 
       {/* Mobile sticky bar */}
       {(phone || storePhoneClean) && (
-        <div className="fixed inset-x-0 bottom-0 z-50 flex translate-y-0 items-center gap-2 border-t border-neutral-200 bg-white/95 px-3 py-2 shadow-[0_-8px_24px_rgba(0,0,0,0.12)] backdrop-blur supports-[padding:max(0px)]:pb-[max(0.5rem,env(safe-area-inset-bottom))] dark:border-neutral-800 dark:bg-black/95 md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-50 flex translate-y-0 items-center gap-2 border-t border-neutral-200 bg-white/95 px-3 py-2 shadow-[0_-8px_24px_rgba(0,0,0,0.12)] backdrop-blur supports-[padding:max(0px)]:pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden">
           <div className="min-w-0 flex-1 basis-0">{renderAddToCart("p-3 text-sm")}</div>
           {phone && (
             <div className="min-w-0 flex-1 basis-0">

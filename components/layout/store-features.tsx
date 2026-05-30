@@ -31,24 +31,24 @@ const features = [
 export function StoreFeatures() {
   return (
     <div className="hidden lg:block">
-      <div className="rounded-xl bg-white dark:bg-neutral-900 overflow-hidden border border-neutral-200 dark:border-neutral-800">
-        <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
-          <h3 className="font-semibold text-sm uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
+      <div className="rounded-2xl bg-white overflow-hidden border border-neutral-200 h-full flex flex-col shadow-sm">
+        <div className="px-4 py-3 border-b border-neutral-200 shrink-0">
+          <h3 className="font-semibold text-sm uppercase tracking-wide text-neutral-900">
             Why Shop With Us
           </h3>
         </div>
-        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+        <div className="divide-y divide-neutral-200 overflow-y-auto">
           {features.map((feature, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              className="flex items-start gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors"
             >
-              <div className="text-teal-600 mt-0.5 shrink-0">{feature.icon}</div>
+              <div className="text-blue-600 mt-0.5 shrink-0">{feature.icon}</div>
               <div>
-                <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                <p className="text-sm font-medium text-neutral-900">
                   {feature.title}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                <p className="text-xs text-neutral-600 mt-0.5">
                   {feature.description}
                 </p>
               </div>

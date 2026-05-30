@@ -77,23 +77,25 @@ export default function Search() {
       onFocus={() => setOpen(true)}
       onBlur={() => window.setTimeout(() => setOpen(false), 150)}
     >
-      <input
-        type="text"
-        name="q"
-        placeholder="Search for products..."
-        autoComplete="off"
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setOpen(true);
-        }}
-        className="text-md w-full rounded-lg border bg-white px-4 py-2 text-black placeholder:text-neutral-500 md:text-sm dark:border-neutral-800 dark:bg-transparent dark:text-white dark:placeholder:text-neutral-400"
-      />
-      <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
-        <MagnifyingGlassIcon className="h-4" />
+      <div className="relative flex items-center">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search products, brands..."
+          autoComplete="off"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpen(true);
+          }}
+          className="text-md w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 pr-12 text-neutral-900 placeholder:text-neutral-500 transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 md:text-sm"
+        />
+        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-neutral-100 p-2">
+          <MagnifyingGlassIcon className="h-4 text-neutral-600" />
+        </div>
       </div>
       {open && query.trim().length >= 2 ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-black">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xl">
           {loading ? (
             <div className="px-4 py-3 text-sm text-neutral-500">Searching...</div>
           ) : results.length ? (
@@ -103,7 +105,7 @@ export default function Search() {
                   <Link
                     key={product.handle}
                     href={`/product/${product.handle}`}
-                    className="flex items-center gap-3 border-b border-neutral-100 px-3 py-2 last:border-b-0 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900"
+                    className="flex items-center gap-3 border-b border-neutral-100 px-3 py-2 last:border-b-0 hover:bg-neutral-100"
                     onMouseDown={(event) => {
                       event.preventDefault();
                       setOpen(false);
@@ -111,7 +113,7 @@ export default function Search() {
                     }}
                     onClick={() => setOpen(false)}
                   >
-                    <div className="h-12 w-12 flex-none overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-900">
+                    <div className="h-12 w-12 flex-none overflow-hidden rounded-md bg-neutral-100">
                       {product.featuredImage?.url ? (
                         <img
                           src={product.featuredImage.url}
@@ -121,7 +123,7 @@ export default function Search() {
                       ) : null}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="line-clamp-2 text-sm font-medium leading-snug text-black dark:text-white">
+                      <p className="line-clamp-2 text-sm font-medium leading-snug text-black">
                         {product.title}
                       </p>
                       {product.priceRange?.minVariantPrice?.amount ? (
@@ -136,7 +138,7 @@ export default function Search() {
               </div>
               <Link
                 href={`/search?q=${encodeURIComponent(query.trim())}`}
-                className="block border-t border-neutral-100 px-4 py-2 text-center text-sm font-medium hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900"
+                className="block border-t border-neutral-100 px-4 py-2 text-center text-sm font-medium hover:bg-neutral-100"
                 onClick={() => setOpen(false)}
               >
                 View all results
@@ -154,12 +156,14 @@ export default function Search() {
 export function SearchSkeleton() {
   return (
     <form className="w-max-[550px] relative w-full lg:w-80 xl:w-full">
-      <input
-        placeholder="Search for products..."
-        className="w-full rounded-lg border bg-white px-4 py-2 text-sm text-black placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-transparent dark:text-white dark:placeholder:text-neutral-400"
-      />
-      <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
-        <MagnifyingGlassIcon className="h-4" />
+      <div className="relative flex items-center">
+        <input
+          placeholder="Search products, brands..."
+          className="text-md w-full rounded-full border border-neutral-300 bg-white px-4 py-2.5 pr-12 text-sm text-neutral-900 placeholder:text-neutral-500"
+        />
+        <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-neutral-100 p-2">
+          <MagnifyingGlassIcon className="h-4 text-neutral-600" />
+        </div>
       </div>
     </form>
   );

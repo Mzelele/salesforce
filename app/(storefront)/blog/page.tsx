@@ -15,32 +15,32 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">Blog</h1>
-        <p className="mt-3 text-neutral-500 dark:text-neutral-400">Recent articles, guides, and updates.</p>
+        <h1 className="text-4xl font-bold tracking-tight text-neutral-900 md:text-5xl">Blog</h1>
+        <p className="mt-3 text-neutral-600">Recent articles, guides, and updates.</p>
       </div>
       {posts.length ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <Link key={post._id.toString()} href={`/blog/${post.slug}`} className="group overflow-hidden rounded-2xl border border-neutral-200 bg-white transition hover:-translate-y-1 hover:shadow-lg dark:border-neutral-800 dark:bg-black">
-              <div className="relative aspect-[16/10] bg-neutral-100 dark:bg-neutral-900">
+            <Link key={post._id.toString()} href={`/blog/${post.slug}`} className="group overflow-hidden rounded-2xl border border-neutral-200 bg-white transition hover:-translate-y-1 hover:shadow-lg">
+              <div className="relative aspect-[16/10] bg-neutral-100">
                 {post.featuredImage ? <img src={post.featuredImage} alt={post.title} className="h-full w-full object-cover transition group-hover:scale-105" /> : null}
               </div>
               <div className="space-y-3 p-5">
                 <p className="text-xs uppercase tracking-wide text-neutral-500">{new Intl.DateTimeFormat(undefined, { year: "numeric", month: "short", day: "numeric" }).format(new Date(post.publishedAt || post.createdAt))}</p>
-                <h2 className="text-xl font-semibold group-hover:underline">{post.title}</h2>
-                <p className="line-clamp-3 text-sm text-neutral-600 dark:text-neutral-400">{post.excerpt || post.metaDescription}</p>
+                <h2 className="text-xl font-semibold text-neutral-900 group-hover:underline">{post.title}</h2>
+                <p className="line-clamp-3 text-sm text-neutral-600">{post.excerpt || post.metaDescription}</p>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="py-16 text-center text-neutral-500">No blog posts published yet.</p>
+        <p className="py-16 text-center text-neutral-600">No blog posts published yet.</p>
       )}
       {totalPages > 1 && (
         <div className="mt-10 flex items-center justify-center gap-3">
-          {page > 1 && <Link className="rounded-md border px-4 py-2 text-sm" href={`/blog?page=${page - 1}`}>Previous</Link>}
-          <span className="text-sm text-neutral-500">Page {page} of {totalPages}</span>
-          {page < totalPages && <Link className="rounded-md border px-4 py-2 text-sm" href={`/blog?page=${page + 1}`}>Next</Link>}
+          {page > 1 && <Link className="rounded-md border border-neutral-200 px-4 py-2 text-sm text-neutral-900 hover:bg-neutral-50" href={`/blog?page=${page - 1}`}>Previous</Link>}
+          <span className="text-sm text-neutral-600">Page {page} of {totalPages}</span>
+          {page < totalPages && <Link className="rounded-md border border-neutral-200 px-4 py-2 text-sm text-neutral-900 hover:bg-neutral-50" href={`/blog?page=${page + 1}`}>Next</Link>}
         </div>
       )}
     </div>

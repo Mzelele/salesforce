@@ -26,16 +26,16 @@ export default async function SearchPage(props: {
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-4">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
-      <div className="mb-6 flex items-end gap-2 border-b border-neutral-200 pb-3 dark:border-neutral-700 sm:gap-3">
+      <div className="mb-6 flex items-end gap-2 border-b border-neutral-200 pb-3 sm:gap-3">
         {searchValue ? (
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-sm text-neutral-900">
             {products.length === 0
               ? "There are no products that match "
               : `Showing ${products.length} ${resultsText} for `}
             <span className="font-bold">&quot;{searchValue}&quot;</span>
           </p>
         ) : (
-          <h1 className="text-2xl font-bold">Search</h1>
+          <h1 className="text-2xl font-bold text-neutral-900">Search</h1>
         )}
         <div className="min-w-0 flex-1 sm:ml-auto sm:flex-none">
           <FilterList list={sorting} title="Sort by" horizontal />

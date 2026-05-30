@@ -15,7 +15,6 @@ function CircularCategoryCarousel({ categories }: { categories: Category[] }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(6);
 
   const checkScroll = () => {
     if (scrollContainerRef.current) {
@@ -27,7 +26,7 @@ function CircularCategoryCarousel({ categories }: { categories: Category[] }) {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 400;
+      const scrollAmount = 300;
       scrollContainerRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -36,46 +35,54 @@ function CircularCategoryCarousel({ categories }: { categories: Category[] }) {
     }
   };
 
-  const displayedCategories = categories.slice(0, visibleCount);
-  const hasMore = visibleCount < categories.length;
-  const remainingCount = categories.length - visibleCount;
-  const nextLoadCount = Math.min(6, remainingCount);
+  // Array of vibrant background colors for variety
+  const bgColors = [
+    'bg-gradient-to-br from-orange-400 to-orange-500',
+    'bg-gradient-to-br from-amber-400 to-yellow-500',
+    'bg-gradient-to-br from-orange-500 to-amber-600',
+    'bg-gradient-to-br from-yellow-400 to-orange-400',
+    'bg-gradient-to-br from-blue-800 to-blue-900',
+    'bg-gradient-to-br from-red-500 to-orange-500',
+  ];
 
   return (
-    <section className="mx-auto mb-8 w-full max-w-7xl px-4 mt-4 lg:mt-16">
-      <div className="lg:rounded-2xl lg:border lg:border-orange-300 lg:bg-white lg:p-8 lg:shadow-sm dark:lg:border-neutral-800 dark:lg:bg-neutral-950">
-        <div className="relative flex items-center gap-2">
+    <section className="w-full py-4 lg:py-6">
+      {/* Desktop - 6 columns filling width with scrolling */}
+      <div className="hidden lg:block">
+        <div className="relative flex items-center gap-2 px-2">
           {/* Left Arrow */}
           <button
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
-            className="z-10 p-2 transition-all disabled:opacity-30 hidden lg:flex flex-shrink-0 outline-none focus:outline-none"
+            className="z-10 flex-shrink-0 rounded-full bg-white p-2 shadow-md transition-all hover:shadow-lg hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Scroll left"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 w-5 text-neutral-700" />
           </button>
 
-          {/* Categories Carousel - Desktop */}
+          {/* Categories Carousel - Desktop - 6 columns */}
           <div
             ref={scrollContainerRef}
             onScroll={checkScroll}
-            className="hidden lg:flex gap-4 overflow-x-auto pb-2 scrollbar-hide flex-1"
+            className="flex gap-1 overflow-x-auto pb-2 scrollbar-hide flex-1"
             style={{
               scrollBehavior: "smooth",
               scrollSnapType: "x mandatory",
             }}
           >
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <Link
                 key={category.slug}
                 href={`/category/${category.slug}`}
-                className="flex flex-col items-center gap-2 flex-shrink-0"
-                style={{ scrollSnapAlign: "center" }}
+                className="flex flex-col items-center gap-2 flex-shrink-0 group"
+                style={{ scrollSnapAlign: "center", minWidth: "calc(16.666% - 10px)" }}
               >
-                <div className="flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-red-100 to-red-200 text-6xl transition-transform hover:scale-110 dark:from-teal-900/20 dark:to-teal-800/20 flex-shrink-0">
-                  {category.emoji || "📦"}
+                <div className={`relative flex h-36 w-36 items-center justify-center rounded-full ${bgColors[index % bgColors.length]} transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl shadow-lg overflow-visible`}>
+                  <span className="text-6xl transform group-hover:scale-125 transition-transform duration-300" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
+                    {category.emoji || "📦"}
+                  </span>
                 </div>
-                <p className="text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 line-clamp-2 w-40">
+                <p className="text-center text-xs font-semibold text-white line-clamp-2 w-36 drop-shadow-sm">
                   {category.title}
                 </p>
               </Link>
@@ -86,43 +93,32 @@ function CircularCategoryCarousel({ categories }: { categories: Category[] }) {
           <button
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
-            className="z-10 p-2 transition-all disabled:opacity-30 hidden lg:flex flex-shrink-0 outline-none focus:outline-none"
+            className="z-10 flex-shrink-0 rounded-full bg-white p-2 shadow-md transition-all hover:shadow-lg hover:scale-105 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Scroll right"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 w-5 text-neutral-700" />
           </button>
-
-          {/* Mobile Grid - 3 columns with wrapping */}
-          <div className="lg:hidden grid grid-cols-3 gap-4 w-full">
-            {displayedCategories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className="flex flex-col items-center gap-2"
-              >
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-blue-200 text-3xl transition-transform hover:scale-110 dark:from-teal-900/20 dark:to-teal-800/20">
-                  {category.emoji || "📦"}
-                </div>
-                <p className="text-center text-xs font-medium text-neutral-700 dark:text-neutral-300 line-clamp-2 w-24">
-                  {category.title}
-                </p>
-              </Link>
-            ))}
-          </div>
         </div>
+      </div>
 
-        {/* Load More Button - appears after all visible categories */}
-        {hasMore && (
-          <div className="mt-6 flex justify-center lg:hidden">
-            <Button
-              onClick={() => setVisibleCount(prev => prev + nextLoadCount)}
-              variant="outline"
-              className="px-8"
-            >
-              Load More
-            </Button>
-          </div>
-        )}
+      {/* Mobile Grid - 4 columns filling width */}
+      <div className="lg:hidden grid grid-cols-4 gap-1 px-3 w-full">
+        {categories.map((category, index) => (
+          <Link
+            key={category.slug}
+            href={`/category/${category.slug}`}
+            className="flex flex-col items-center gap-1.5 group"
+          >
+            <div className={`relative flex h-24 w-24 items-center justify-center rounded-full ${bgColors[index % bgColors.length]} transition-all duration-300 group-hover:scale-110 shadow-lg overflow-visible`}>
+              <span className="text-4xl transform group-hover:scale-125 transition-transform duration-300" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
+                {category.emoji || "📦"}
+              </span>
+            </div>
+            <p className="text-center text-[10px] font-semibold text-white line-clamp-2 w-24 drop-shadow-sm">
+              {category.title}
+            </p>
+          </Link>
+        ))}
       </div>
 
       <style jsx>{`
@@ -143,38 +139,48 @@ function CategoryGrid({ categories }: { categories: Category[] }) {
   const hasMore = categories.length > 6;
   const displayedCategories = showAll ? categories : categories.slice(0, 6);
 
-  return (
-    <section className="mx-auto mb-8 w-full max-w-7xl px-4 mt-16">
-      <div className="lg:rounded-2xl lg:border lg:border-orange-300 lg:bg-white lg:p-8 lg:shadow-sm dark:lg:border-neutral-800 dark:lg:bg-neutral-950">
-        <div className="grid grid-cols-3 gap-4 lg:grid-cols-6">
-          {displayedCategories.map((category) => (
-            <Link
-              key={category.slug}
-              href={`/category/${category.slug}`}
-              className="flex flex-col items-center gap-3"
-            >
-              <div className="flex h-24 w-24 lg:h-32 lg:w-32 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-purple-200 text-3xl lg:text-5xl transition-transform hover:scale-110 dark:from-teal-900/20 dark:to-teal-800/20">
-                {category.emoji || "📦"}
-              </div>
-              <p className="text-center text-xs lg:text-sm font-medium text-neutral-700 dark:text-neutral-300 line-clamp-2 w-24 lg:w-32">
-                {category.title}
-              </p>
-            </Link>
-          ))}
-        </div>
+  // Array of vibrant background colors for variety
+  const bgColors = [
+    'bg-gradient-to-br from-orange-400 to-orange-500',
+    'bg-gradient-to-br from-amber-400 to-yellow-500',
+    'bg-gradient-to-br from-orange-500 to-amber-600',
+    'bg-gradient-to-br from-yellow-400 to-orange-400',
+    'bg-gradient-to-br from-blue-800 to-blue-900',
+    'bg-gradient-to-br from-red-500 to-orange-500',
+  ];
 
-        {hasMore && !showAll && (
-          <div className="mt-6 flex justify-center">
-            <Button
-              onClick={() => setShowAll(true)}
-              variant="outline"
-              className="px-8"
-            >
-              Load More
-            </Button>
-          </div>
-        )}
+  return (
+    <section className="w-full py-4 lg:py-6 px-3">
+      <div className="grid grid-cols-4 gap-3 lg:grid-cols-6 lg:gap-4">
+        {displayedCategories.map((category, index) => (
+          <Link
+            key={category.slug}
+            href={`/category/${category.slug}`}
+            className="flex flex-col items-center gap-1.5 lg:gap-2 group"
+          >
+            <div className={`relative flex h-24 w-24 lg:h-36 lg:w-36 items-center justify-center rounded-full ${bgColors[index % bgColors.length]} transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl shadow-lg overflow-visible`}>
+              <span className="text-4xl lg:text-6xl transform group-hover:scale-125 transition-transform duration-300" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
+                {category.emoji || "📦"}
+              </span>
+            </div>
+            <p className="text-center text-[10px] lg:text-xs font-semibold text-white line-clamp-2 w-24 lg:w-36 drop-shadow-sm">
+              {category.title}
+            </p>
+          </Link>
+        ))}
       </div>
+
+      {hasMore && !showAll && (
+        <div className="mt-4 flex justify-center">
+          <Button
+            onClick={() => setShowAll(true)}
+            variant="outline"
+            className="px-6 py-2 text-sm bg-white hover:bg-gray-100"
+          >
+            Load More
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

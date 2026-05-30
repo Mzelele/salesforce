@@ -48,17 +48,17 @@ export default function FilterItemDropdown({ list, defaultPath, placeholder = "S
         onClick={() => {
           setOpenSelect(!openSelect);
         }}
-        className="flex min-w-[110px] items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-2 py-2 text-sm shadow-sm transition hover:border-neutral-300 sm:min-w-[140px] sm:px-3 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600"
+        className="flex min-w-[110px] items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-2 py-2 text-sm shadow-sm transition hover:border-neutral-300 sm:min-w-[140px] sm:px-3"
       >
-        <div className="truncate">{active || <span className="text-neutral-400">{placeholder}</span>}</div>
-        <ChevronDownIcon className="h-4 flex-none" />
+        <div className="truncate text-neutral-900">{active || <span className="text-neutral-400">{placeholder}</span>}</div>
+        <ChevronDownIcon className="h-4 flex-none text-neutral-900" />
       </div>
       {openSelect && (
         <div
           onClick={() => {
             setOpenSelect(false);
           }}
-          className="absolute z-40 mt-2 w-full rounded-lg border border-neutral-200 bg-white p-2 shadow-lg dark:border-neutral-700 dark:bg-black"
+          className="absolute z-40 mt-2 w-full rounded-lg border border-neutral-200 bg-white p-2 shadow-lg"
         >
           {list.map((item: ListItem, i) => (
             <FilterItem key={i} item={item} />

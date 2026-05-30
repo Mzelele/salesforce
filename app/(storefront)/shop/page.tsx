@@ -62,7 +62,7 @@ export default async function ShopPage(props: {
 
   return (
     <>
-      <div className="mb-6 flex items-center gap-1 border-b border-neutral-200 py-3 sm:gap-3 dark:border-neutral-700">
+      <div className="mb-6 flex items-center gap-1 border-b border-neutral-200 py-3 sm:gap-3">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop" }]} />
         <Collections horizontal defaultPath="/product-category/mens-watch" />
         <div className="ml-auto">
@@ -70,7 +70,7 @@ export default async function ShopPage(props: {
         </div>
       </div>
       {searchValue ? (
-        <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="mb-4 text-sm text-neutral-900">
           {products.length === 0
             ? "There are no products that match "
             : `Showing ${products.length} ${resultsText} for `}

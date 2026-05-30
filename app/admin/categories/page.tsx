@@ -21,6 +21,7 @@ interface Category {
   slug: string;
   description?: string;
   image?: string;
+  emoji?: string;
   parent?: { _id: string; name: string } | null;
   deletedAt?: string;
 }
@@ -35,6 +36,7 @@ export default function CategoriesPage() {
     slug: "",
     description: "",
     image: "",
+    emoji: "",
     parent: "none",
   });
 
@@ -83,7 +85,7 @@ export default function CategoriesPage() {
 
     if (res.ok) {
       toast.success(editingId ? "Category updated" : "Category created");
-      setForm({ name: "", slug: "", description: "", image: "", parent: "none" });
+      setForm({ name: "", slug: "", description: "", image: "", emoji: "", parent: "none" });
       setEditingId(null);
       fetchCategories();
     } else {

@@ -68,17 +68,17 @@ export default async function ProductCategoryPage(props: {
 
   return (
     <>
-      <div className="mb-3 flex min-w-0 items-end gap-2 border-b border-neutral-200 pb-2 dark:border-neutral-700 sm:mb-6 sm:items-center sm:gap-3 sm:pb-3">
+      <div className="mb-3 flex min-w-0 items-end gap-2 border-b border-neutral-200 pb-2 sm:mb-6 sm:items-center sm:gap-3 sm:pb-3">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
           <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: collection?.title || "Category" }]} />
-          <h1 className="truncate text-xl font-bold sm:text-2xl">{collection?.title || "Category"}</h1>
+          <h1 className="truncate text-xl font-bold text-neutral-900 sm:text-2xl">{collection?.title || "Category"}</h1>
         </div>
         <div className="flex-none">
           <FilterList list={sorting} title="Sort by" horizontal />
         </div>
       </div>
       {products.length === 0 ? (
-        <p className="py-3 text-lg">{`No products found in this category`}</p>
+        <p className="py-3 text-lg text-neutral-900">{`No products found in this category`}</p>
       ) : (
         <>
           <Grid className="grid-cols-2 lg:grid-cols-6">

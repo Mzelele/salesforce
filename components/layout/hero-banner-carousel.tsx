@@ -24,7 +24,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
   if (images.length === 0) return null;
 
   return (
-    <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-xl bg-neutral-100">
+    <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-neutral-100 shadow-md">
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${activeIndex * 100}%)` }}
@@ -44,7 +44,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
         ))}
       </div>
       {images.length > 1 ? (
-        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
           {images.map((_, index) => (
             <button
               key={index}
@@ -52,7 +52,7 @@ export function HeroBannerCarousel({ images, interval }: HeroBannerCarouselProps
               aria-label={`Show banner ${index + 1}`}
               onClick={() => setActiveIndex(index)}
               className={`h-2 rounded-full transition-all ${
-                index === activeIndex ? "w-6 bg-white" : "w-2 bg-white/60"
+                index === activeIndex ? "w-8 bg-white" : "w-2 bg-white/60"
               }`}
             />
           ))}

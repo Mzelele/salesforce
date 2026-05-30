@@ -1,8 +1,6 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import clsx from "clsx";
 import Price from "components/price";
 import { DEFAULT_OPTION } from "lib/constants";
 import { trackInitiateCheckout } from "lib/meta-pixel";
@@ -88,7 +86,7 @@ export default function CartModal() {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl md:w-[390px] dark:border-neutral-700 dark:bg-black/80 dark:text-white">
+            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 p-6 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#E1F3FF" }}>
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">My Cart</p>
                 <button aria-label="Close cart" onClick={closeCart}>
@@ -98,8 +96,10 @@ export default function CartModal() {
 
               {!cart || cart.lines.length === 0 ? (
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
-                  <ShoppingCartIcon className="h-16" />
-                  <p className="mt-6 text-center text-2xl font-bold">
+                  <svg className="h-16 w-16 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  <p className="mt-6 text-center text-2xl font-bold text-neutral-900">
                     Your cart is empty.
                   </p>
                   <Link
@@ -112,7 +112,7 @@ export default function CartModal() {
                 </div>
               ) : (
                 <div className="flex h-full flex-col justify-between overflow-hidden p-1">
-                  <ul className="grow overflow-auto py-4">
+                  <ul className="grow overflow-auto py-4 border-b border-neutral-200">
                     {cart.lines
                       .sort((a, b) =>
                         a.merchandise.product.title.localeCompare(
@@ -140,7 +140,7 @@ export default function CartModal() {
                         return (
                           <li
                             key={i}
-                            className="flex w-full flex-col border-b border-neutral-300 dark:border-neutral-700"
+                            className="flex w-full flex-col border-b border-neutral-300"
                           >
                             <div className="relative flex w-full flex-row justify-between px-1 py-4">
                               <div className="absolute z-40 -ml-1 -mt-2">
@@ -150,7 +150,7 @@ export default function CartModal() {
                                 />
                               </div>
                               <div className="flex min-w-0 flex-1 flex-row">
-                                <div className="relative h-16 w-16 flex-none overflow-hidden rounded-md border border-neutral-300 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                                <div className="relative h-16 w-16 flex-none overflow-hidden rounded-md border border-neutral-300 bg-neutral-100">
                                   <Image
                                     className="h-full w-full object-cover"
                                     width={64}
@@ -175,12 +175,12 @@ export default function CartModal() {
                                   className="z-30 ml-2 flex min-w-0 flex-1 flex-row space-x-4"
                                 >
                                   <div className="flex min-w-0 flex-1 flex-col text-base">
-                                    <span className="line-clamp-2 leading-tight">
+                                    <span className="line-clamp-2 leading-tight text-neutral-900">
                                       {item.merchandise.product.title}
                                     </span>
                                     {item.merchandise.title !==
                                     DEFAULT_OPTION ? (
-                                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                      <p className="text-sm text-neutral-600 mt-1">
                                         {item.merchandise.title}
                                       </p>
                                     ) : null}
@@ -189,20 +189,20 @@ export default function CartModal() {
                               </div>
                               <div className="flex h-16 flex-col justify-between">
                                 <Price
-                                  className="flex justify-end space-y-2 text-right text-sm"
+                                  className="flex justify-end space-y-2 text-right text-sm text-neutral-900"
                                   amount={item.cost.totalAmount.amount}
                                   currencyCode={
                                     item.cost.totalAmount.currencyCode
                                   }
                                 />
-                                <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+                                <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-300">
                                   <EditItemQuantityButton
                                     item={item}
                                     type="minus"
                                     optimisticUpdate={updateCartItem}
                                   />
                                   <p className="w-6 text-center">
-                                    <span className="w-full text-sm">
+                                    <span className="w-full text-sm text-neutral-900">
                                       {item.quantity}
                                     </span>
                                   </p>
@@ -218,11 +218,11 @@ export default function CartModal() {
                         );
                       })}
                   </ul>
-                  <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
-                      <p>Total</p>
+                  <div className="py-4 text-sm text-neutral-600">
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-300 pb-1 pt-1">
+                      <p className="text-neutral-900">Total</p>
                       <Price
-                        className="text-right text-base text-black dark:text-white"
+                        className="text-right text-base text-neutral-900"
                         amount={cart.cost.totalAmount.amount}
                         currencyCode={cart.cost.totalAmount.currencyCode}
                       />
@@ -247,13 +247,10 @@ export default function CartModal() {
 
 function CloseCart({ className }: { className?: string }) {
   return (
-    <div className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors dark:border-neutral-700 dark:text-white">
-      <XMarkIcon
-        className={clsx(
-          "h-6 transition-all ease-in-out hover:scale-110",
-          className,
-        )}
-      />
+    <div className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-neutral-900 transition-colors">
+      <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+      </svg>
     </div>
   );
 }
