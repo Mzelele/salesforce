@@ -94,7 +94,7 @@ export default function CustomersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Customers</h1>
+      <h1 className="text-2xl font-bold dark:text-white">Customers</h1>
 
       <div className="flex items-center gap-3">
         <div className="relative max-w-sm flex-1">
@@ -123,7 +123,7 @@ export default function CustomersPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">
+                <th className="px-4 py-3 text-left font-medium dark:text-white">
                   <input
                     type="checkbox"
                     checked={customers.length > 0 && selectedIds.size === customers.length}
@@ -131,12 +131,12 @@ export default function CustomersPage() {
                     className="h-4 w-4 rounded border-neutral-300"
                   />
                 </th>
-                <th className="px-4 py-3 text-left font-medium">Name</th>
-                <th className="px-4 py-3 text-left font-medium">Email</th>
-                <th className="px-4 py-3 text-left font-medium">Phone</th>
-                <th className="px-4 py-3 text-left font-medium">Orders</th>
-                <th className="px-4 py-3 text-left font-medium">Total Spent</th>
-                <th className="px-4 py-3 text-left font-medium">Joined</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Name</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Email</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Phone</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Orders</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Total Spent</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Joined</th>
               </tr>
             </thead>
             <tbody>
@@ -215,7 +215,7 @@ export default function CustomersPage() {
               )}
               {!loading && customers.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-neutral-500">
+                  <td colSpan={7} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No customers found
                   </td>
                 </tr>
@@ -251,3 +251,5 @@ export default function CustomersPage() {
     </div>
   );
 }
+
+

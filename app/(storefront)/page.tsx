@@ -15,7 +15,7 @@ export async function generateMetadata() {
     const settings = await getStoreSettings();
     const title = settings.metaTitle || settings.storeName || "Watches in Kenya";
     const description = settings.metaDescription || "Discover a curated collection of luxury and everyday watches in Kenya. Shop top brands with fast delivery across Nairobi and nationwide. Best prices guaranteed.";
-    
+
     return {
       title,
       description,
@@ -84,16 +84,17 @@ export default async function HomePage() {
     return result && result.products.length > 0;
   });
 
+  const categorySummaries = categories.map((c) => ({
+    slug: c.handle,
+    title: c.title,
+    emoji: c.emoji,
+    image: c.image,
+  }));
+
   return (
     <>
-      <HeroSection
-        categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
-      />
-      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
-        <CategoryCircles
-          categories={categories.map((c) => ({ slug: c.handle, title: c.title, emoji: c.emoji }))}
-        />
-      </div>
+      <HeroSection categories={categorySummaries} />
+      <CategoryCircles categories={categorySummaries} />
       <CategorySections
         categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title }))}
         initialData={initialData}

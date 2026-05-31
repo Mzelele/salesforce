@@ -10,18 +10,25 @@ export function ProductDescription({
 }) {
   return (
     <>
-      <div className="mb-3 flex flex-col border-b border-neutral-200 pb-3 dark:border-neutral-800 md:mb-4 md:pb-4">
-        <h1 className="mb-2 text-lg font-semibold leading-snug md:text-3xl lg:text-4xl">{product.title}</h1>
+      <div className="mb-4 border-b border-neutral-200 pb-4 md:mb-5 md:pb-5">
+        <h1 className="mb-3 text-2xl font-semibold leading-tight text-neutral-950 md:text-3xl lg:text-4xl">
+          {product.title}
+        </h1>
         <ProductPrice product={product} />
       </div>
-      <VariantSelector options={product.options} variants={product.variants} images={product.images} defaultVariant={product.defaultVariant} />
+      <VariantSelector
+        options={product.options}
+        variants={product.variants}
+        images={product.images}
+        defaultVariant={product.defaultVariant}
+      />
       {product.productHighlights ? (
-        <div className="my-4 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-950/50">
-          <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 md:text-sm">
+        <div className="mt-5 rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-neutral-500 md:text-sm">
             Key Features
           </h3>
           <Prose
-            className="text-sm leading-relaxed dark:text-white"
+            className="text-sm leading-relaxed text-neutral-700"
             html={product.productHighlights}
           />
         </div>

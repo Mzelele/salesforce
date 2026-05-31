@@ -33,21 +33,21 @@ export function ProductPrice({ product }: { product: Product }) {
     : 0;
 
   return (
-    <div className="flex flex-row items-center gap-2 text-left">
-      <span className="text-lg font-bold text-blue-600 dark:text-blue-400 md:text-sm">
+    <div className="flex flex-wrap items-center gap-2 text-left">
+      <span className="text-xl font-bold text-blue-600 md:text-2xl">
         {hasRange
           ? `${formatPrice(priceAmount, currencyCode)} - ${formatPrice(maxPriceAmount, currencyCode)}`
           : formatPrice(priceAmount, currencyCode)}
       </span>
       {hasDiscount ? (
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-neutral-500 line-through dark:text-neutral-400">
+        <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm">
+          <span className="text-neutral-500 line-through">
             {formatPrice(compareAmount, currencyCode)}
           </span>
-          <span className="rounded-full bg-green-100 px-2 py-1 font-semibold text-green-700 dark:bg-green-950 dark:text-green-300">
+          <span className="rounded-full bg-green-100 px-2 py-1 font-semibold text-green-700">
             {discountPercent}% Off
           </span>
-          <span className="hidden font-medium text-neutral-600 dark:text-neutral-300 md:inline">
+          <span className="font-medium text-neutral-600">
             Save {formatPrice(savingsAmount, currencyCode)}
           </span>
         </div>

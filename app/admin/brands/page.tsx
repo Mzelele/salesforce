@@ -140,10 +140,10 @@ export default function BrandsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Brands</h1>
+      <h1 className="text-2xl font-bold dark:text-white">Brands</h1>
 
       <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-        <h3 className="mb-3 font-semibold">
+        <h3 className="mb-3 font-semibold dark:text-white">
           {editingId ? "Edit Brand" : "Add Brand"}
         </h3>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -211,10 +211,10 @@ export default function BrandsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">Image</th>
-                <th className="px-4 py-3 text-left font-medium">Name</th>
-                <th className="px-4 py-3 text-left font-medium">Slug</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Image</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Name</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Slug</th>
+                <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -264,7 +264,7 @@ export default function BrandsPage() {
               )}
               {!loading && brands.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-neutral-500">
+                  <td colSpan={4} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No brands found
                   </td>
                 </tr>
@@ -276,3 +276,5 @@ export default function BrandsPage() {
     </div>
   );
 }
+
+

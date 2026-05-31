@@ -71,7 +71,7 @@ export default function PagesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Pages</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Pages</h1>
         <Link href="/admin/pages/new">
           <Button>
             <Plus className="mr-1 h-4 w-4" />
@@ -85,12 +85,12 @@ export default function PagesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">Title</th>
-                <th className="px-4 py-3 text-left font-medium">Slug</th>
-                <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-left font-medium">Footer Order</th>
-                <th className="px-4 py-3 text-left font-medium">Last updated</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Title</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Slug</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Status</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Footer Order</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Last updated</th>
+                <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -152,7 +152,7 @@ export default function PagesPage() {
               )}
               {!loading && pages.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-neutral-500">
+                  <td colSpan={6} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No pages found
                   </td>
                 </tr>
@@ -164,3 +164,5 @@ export default function PagesPage() {
     </div>
   );
 }
+
+

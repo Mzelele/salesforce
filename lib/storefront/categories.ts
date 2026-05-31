@@ -10,6 +10,8 @@ function mapCategory(doc: any): Collection {
     seo,
     updatedAt: doc.updatedAt?.toISOString?.() || new Date().toISOString(),
     path: `/product-category/${doc.slug}`,
+    emoji: doc.emoji,
+    image: doc.image,
   };
 }
 

@@ -61,7 +61,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-4 md:space-y-6">
-      <h1 className="text-xl font-bold md:text-2xl">Dashboard</h1>
+      <h1 className="text-xl font-bold dark:text-white md:text-2xl">Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-2 md:gap-4 lg:grid-cols-4">
         <StatsCard title="Today's Sales" value={salesToday} icon={TrendingUp} prefix="KES" />
@@ -72,7 +72,7 @@ export default async function AdminDashboardPage() {
 
       <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
         <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900 md:p-4">
-          <h2 className="mb-3 text-base font-semibold md:mb-4 md:text-lg">Recent Orders</h2>
+          <h2 className="mb-3 text-base font-semibold dark:text-white md:mb-4 md:text-lg">Recent Orders</h2>
           <div className="space-y-2 md:hidden">
             {populatedOrders.map((order: any) => (
               <div key={order._id.toString()} className="rounded-md border border-neutral-100 p-2.5 dark:border-neutral-800">
@@ -93,18 +93,18 @@ export default async function AdminDashboardPage() {
               </div>
             ))}
             {populatedOrders.length === 0 && (
-              <p className="py-4 text-center text-sm text-neutral-500">No orders yet</p>
+              <p className="py-4 text-center text-sm text-neutral-500 dark:text-neutral-400">No orders yet</p>
             )}
           </div>
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                  <th className="pb-2 text-left font-medium">Order #</th>
-                  <th className="pb-2 text-left font-medium">Customer</th>
-                  <th className="pb-2 text-left font-medium">Total</th>
-                  <th className="pb-2 text-left font-medium">Status</th>
-                  <th className="pb-2 text-left font-medium">Date</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Order #</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Customer</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Total</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Status</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900 md:p-4">
-          <h2 className="mb-3 text-base font-semibold md:mb-4 md:text-lg">Low Stock Alerts</h2>
+          <h2 className="mb-3 text-base font-semibold dark:text-white md:mb-4 md:text-lg">Low Stock Alerts</h2>
           <div className="space-y-2 md:hidden">
             {lowStockProducts.map((product: any) => (
               <div key={product._id.toString()} className="rounded-md border border-neutral-100 p-2.5 dark:border-neutral-800">
@@ -147,16 +147,16 @@ export default async function AdminDashboardPage() {
               </div>
             ))}
             {lowStockProducts.length === 0 && (
-              <p className="py-4 text-center text-sm text-neutral-500">All stock levels healthy</p>
+              <p className="py-4 text-center text-sm text-neutral-500 dark:text-neutral-400">All stock levels healthy</p>
             )}
           </div>
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                  <th className="pb-2 text-left font-medium">Product</th>
-                  <th className="pb-2 text-left font-medium">SKU</th>
-                  <th className="pb-2 text-left font-medium">Stock</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Product</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">SKU</th>
+                  <th className="pb-2 text-left font-medium dark:text-white">Stock</th>
                 </tr>
               </thead>
               <tbody>
@@ -185,3 +185,5 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
+
+

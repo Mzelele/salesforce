@@ -152,7 +152,7 @@ export default function OrdersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Orders</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Orders</h1>
         <Button variant="outline" onClick={exportCSV}>
           <Download className="mr-2 h-4 w-4" />
           Export CSV
@@ -225,7 +225,7 @@ export default function OrdersPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">
+                <th className="px-4 py-3 text-left font-medium dark:text-white">
                   <input
                     type="checkbox"
                     checked={orders.length > 0 && selected.size === orders.length}
@@ -233,14 +233,14 @@ export default function OrdersPage() {
                     className="h-4 w-4 rounded border-neutral-300"
                   />
                 </th>
-                <th className="px-4 py-3 text-left font-medium">Order #</th>
-                <th className="px-4 py-3 text-left font-medium">Date</th>
-                <th className="px-4 py-3 text-left font-medium">Customer</th>
-                <th className="px-4 py-3 text-left font-medium">Items</th>
-                <th className="px-4 py-3 text-left font-medium">Total</th>
-                <th className="px-4 py-3 text-left font-medium">Payment</th>
-                <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Order #</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Date</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Customer</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Items</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Total</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Payment</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Status</th>
+                <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -304,7 +304,7 @@ export default function OrdersPage() {
               )}
               {!loading && orders.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-neutral-500">
+                  <td colSpan={9} className="py-8 text-center text-neutral-500 dark:text-neutral-400">
                     No orders found
                   </td>
                 </tr>
@@ -360,3 +360,5 @@ export default function OrdersPage() {
     </div>
   );
 }
+
+

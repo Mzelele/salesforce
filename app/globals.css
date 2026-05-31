@@ -11,11 +11,13 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
 
-@media (prefers-color-scheme: dark) {
   html {
-    color-scheme: dark;
+    color-scheme: light;
+  }
+
+  :root {
+    --radius: 0.5rem;
   }
 }
 
@@ -28,7 +30,7 @@
 a,
 input,
 button {
-  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50;
 }
 
 [role="button"]:not([disabled]),
@@ -36,17 +38,12 @@ button:not([disabled]) {
   @apply cursor-pointer;
 }
 
-@layer base {
-  :root {
-    --radius: 0.5rem;
-  }
-}
-
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

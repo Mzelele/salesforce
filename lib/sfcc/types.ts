@@ -18,6 +18,8 @@ export type Collection = {
   seo: SEO;
   updatedAt: string;
   path: string;
+  emoji?: string;
+  image?: string;
 };
 
 export type SalesforceProduct = {
@@ -203,3 +205,5 @@ export type SortedProductResult = {
   productResult: ShopperProductsTypes.Product;
   index: number;
 };
+
+

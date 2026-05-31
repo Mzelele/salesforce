@@ -303,7 +303,7 @@ function ProductsContent() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">
+                <th className="px-4 py-3 text-left font-medium dark:text-white">
                   <input
                     type="checkbox"
                     checked={products.length > 0 && selected.size === products.length}
@@ -311,15 +311,15 @@ function ProductsContent() {
                     className="h-4 w-4 rounded border-neutral-300"
                   />
                 </th>
-                <th className="px-4 py-3 text-left font-medium">Image</th>
-                <th className="px-4 py-3 text-left font-medium">Name</th>
-                <th className="px-4 py-3 text-left font-medium">SKU</th>
-                <th className="px-4 py-3 text-left font-medium">Type</th>
-                <th className="px-4 py-3 text-left font-medium">Category</th>
-                <th className="px-4 py-3 text-left font-medium">Price</th>
-                <th className="px-4 py-3 text-left font-medium">Stock</th>
-                <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Image</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Name</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">SKU</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Type</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Category</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Price</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Stock</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Status</th>
+                <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -363,12 +363,12 @@ function ProductsContent() {
                         <div className="h-10 w-10 rounded bg-neutral-200 dark:bg-neutral-700" />
                       )}
                     </td>
-                    <td className="px-4 py-3 font-medium">{product.name}</td>
-                    <td className="px-4 py-3 text-neutral-500">{product.sku || "—"}</td>
-                    <td className="px-4 py-3 capitalize">{product.type}</td>
-                    <td className="px-4 py-3">{product.category?.name || "—"}</td>
-                    <td className="px-4 py-3">KES {product.price}</td>
-                    <td className="px-4 py-3">{product.stock}</td>
+                    <td className="px-4 py-3 font-medium dark:text-white">{product.name}</td>
+                    <td className="px-4 py-3 text-neutral-500 dark:text-neutral-300">{product.sku || "—"}</td>
+                    <td className="px-4 py-3 capitalize dark:text-white">{product.type}</td>
+                    <td className="px-4 py-3 dark:text-white">{product.category?.name || "—"}</td>
+                    <td className="px-4 py-3 dark:text-white">KES {product.price}</td>
+                    <td className="px-4 py-3 dark:text-white">{product.stock}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
@@ -599,3 +599,5 @@ export default function ProductsPage() {
     </Suspense>
   );
 }
+
+

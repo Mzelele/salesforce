@@ -29,7 +29,6 @@ export function VariantSelector({
     (options.length === 1 && options[0]?.values.length === 1);
 
   useEffect(() => {
-    // If URL already has variant option params, don't override with default
     const urlParams =
       typeof window !== "undefined"
         ? new URLSearchParams(window.location.search)
@@ -40,12 +39,10 @@ export function VariantSelector({
 
     if (hasUrlOptionParams) return;
 
-    // Check if any option is already selected
     const hasAnyOptionSelected = options.some(
       (option) => state[option.name.toLowerCase()]
     );
 
-    // Auto-select default variant (or first as fallback) if nothing is selected yet
     if (!hasAnyOptionSelected && variants.length > 0) {
       const targetVariant = (defaultVariant
         ? variants.find((v) => v.title === defaultVariant) || variants[0]
@@ -87,8 +84,8 @@ export function VariantSelector({
 
   return options.map((option) => (
     <form key={option.id}>
-      <dl className="mb-4 overflow-visible border-b border-neutral-200 pb-3 dark:border-neutral-800 md:mb-8 md:border-b-0 md:pb-0">
-        <dt className="mb-3 text-xs font-semibold uppercase leading-none tracking-wide text-neutral-500 dark:text-neutral-400 md:mb-4 md:text-sm md:leading-normal">
+      <dl className="mb-4 overflow-visible border-b border-neutral-200 pb-3 md:mb-6 md:pb-4">
+        <dt className="mb-3 text-xs font-semibold uppercase leading-none tracking-[0.18em] text-neutral-500 md:mb-4 md:text-sm md:leading-normal">
           {option.name}
         </dt>
         <dd className={clsx(
@@ -97,14 +94,11 @@ export function VariantSelector({
         )}>
           {option.values.map((value) => {
             const optionNameLowerCase = option.name.toLowerCase();
-
-            // Base option params on current selectedOptions so we can preserve any other param state.
             const optionParams = {
               ...state,
               [optionNameLowerCase]: value.name,
             };
 
-            // Filter out invalid options and check if the option combination is available for sale.
             const filtered = Object.entries(optionParams).filter(
               ([key, value]) =>
                 options.find(
@@ -120,14 +114,12 @@ export function VariantSelector({
               ),
             );
 
-            // The option is active if it's in the selected options.
             const isActive = state[optionNameLowerCase] === value.name;
 
             const handleSelect = () => {
               const optionState = updateOption(optionNameLowerCase, value.name);
               let combinedState = optionState;
 
-              // Check if we now have a complete variant match
               const matchedVariant = variants.find((variant) =>
                 variant.selectedOptions.every(
                   (opt) => optionState[opt.name.toLowerCase()] === opt.value,
@@ -155,14 +147,12 @@ export function VariantSelector({
                 disabled={!isAvailableForSale}
                 title={`${option.name} ${value.name}${!isAvailableForSale ? " (Out of Stock)" : ""}`}
                 className={clsx(
-                  "flex items-center justify-center rounded-full border bg-neutral-100 px-2.5 py-1 text-sm font-medium dark:border-neutral-800 dark:bg-neutral-900 md:min-w-[48px] md:px-2 md:py-1 md:text-base",
+                  "flex items-center justify-center rounded-full border bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-900 md:min-w-[48px] md:px-4",
                   option.values.length <= 4 ? "flex-1" : "min-w-max shrink-0 snap-start",
                   {
-                    "cursor-default ring-2 ring-blue-600": isActive,
-                    "ring-1 ring-transparent transition duration-300 ease-in-out hover:ring-blue-600":
-                      !isActive && isAvailableForSale,
-                    "relative z-10 cursor-not-allowed overflow-hidden bg-neutral-100 text-neutral-500 ring-1 ring-neutral-300 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-neutral-300 before:transition-transform dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700 dark:before:bg-neutral-700":
-                      !isAvailableForSale,
+                    "border-blue-600 ring-2 ring-blue-600 bg-white": isActive,
+                    "border-neutral-200 transition duration-300 ease-in-out hover:border-blue-600 hover:bg-white": !isActive && isAvailableForSale,
+                    "cursor-not-allowed border-neutral-200 bg-neutral-100 text-neutral-400 line-through": !isAvailableForSale,
                   },
                 )}
               >

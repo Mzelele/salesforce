@@ -31,9 +31,9 @@ const features = [
 export function StoreFeatures() {
   return (
     <div className="hidden lg:block">
-      <div className="rounded-2xl bg-white overflow-hidden border border-neutral-200 h-full flex flex-col shadow-sm">
-        <div className="px-4 py-3 border-b border-neutral-200 shrink-0">
-          <h3 className="font-semibold text-sm uppercase tracking-wide text-neutral-900">
+      <div className="flex h-[392px] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+        <div className="shrink-0 border-b border-neutral-200 px-4 py-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-900">
             Why Shop With Us
           </h3>
         </div>
@@ -41,14 +41,14 @@ export function StoreFeatures() {
           {features.map((feature, i) => (
             <div
               key={i}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors"
+              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-neutral-50"
             >
-              <div className="text-blue-600 mt-0.5 shrink-0">{feature.icon}</div>
+              <div className="mt-0.5 shrink-0 text-blue-600">{feature.icon}</div>
               <div>
                 <p className="text-sm font-medium text-neutral-900">
                   {feature.title}
                 </p>
-                <p className="text-xs text-neutral-600 mt-0.5">
+                <p className="mt-0.5 text-xs text-neutral-600">
                   {feature.description}
                 </p>
               </div>

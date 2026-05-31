@@ -61,7 +61,7 @@ export default function BlogsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Blogs</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Blogs</h1>
         <Link href="/admin/blogs/new"><Button><Plus className="mr-1 h-4 w-4" />New Blog</Button></Link>
       </div>
       <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
@@ -69,11 +69,11 @@ export default function BlogsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                <th className="px-4 py-3 text-left font-medium">Title</th>
-                <th className="px-4 py-3 text-left font-medium">Slug</th>
-                <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-left font-medium">Published</th>
-                <th className="px-4 py-3 text-right font-medium">Actions</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Title</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Slug</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Status</th>
+                <th className="px-4 py-3 text-left font-medium dark:text-white">Published</th>
+                <th className="px-4 py-3 text-right font-medium dark:text-white">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -95,7 +95,7 @@ export default function BlogsPage() {
                   <td className="px-4 py-3 text-right"><div className="flex justify-end gap-2"><Link href={`/admin/blogs/${blog._id}`}><Button variant="ghost" size="icon"><Pencil className="h-4 w-4" /></Button></Link><Button variant="ghost" size="icon" onClick={() => handleDelete(blog)}><Trash2 className="h-4 w-4 text-red-500" /></Button></div></td>
                 </tr>
               ))}
-              {!loading && blogs.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-neutral-500">No blogs found</td></tr>}
+              {!loading && blogs.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-neutral-500 dark:text-neutral-400">No blogs found</td></tr>}
             </tbody>
           </table>
         </div>
@@ -103,3 +103,5 @@ export default function BlogsPage() {
     </div>
   );
 }
+
+

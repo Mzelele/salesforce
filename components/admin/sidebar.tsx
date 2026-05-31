@@ -58,7 +58,7 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed left-4 top-4 z-50 rounded-md bg-white p-2 shadow md:hidden dark:bg-neutral-800"
+        className="fixed left-4 top-4 z-50 rounded-md bg-white p-2 shadow md:hidden dark:bg-neutral-800 dark:text-white"
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
@@ -70,7 +70,7 @@ export default function Sidebar() {
         )}
       >
         <div className="flex h-16 items-center border-b border-neutral-200 px-6 dark:border-neutral-700">
-          <h1 className="text-lg font-bold">Admin</h1>
+          <h1 className="text-lg font-bold dark:text-white">Admin</h1>
         </div>
 
         <nav className="flex-1 space-y-1 p-4">
@@ -120,3 +120,4 @@ export default function Sidebar() {
     </>
   );
 }
+
