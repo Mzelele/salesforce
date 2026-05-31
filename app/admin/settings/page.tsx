@@ -570,7 +570,7 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={settings.showLogoIcon}
                 onChange={(e) => updateField("showLogoIcon", e.target.checked)}
-                className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500 dark:border-neutral-600 dark:bg-neutral-800"
               />
               Show logo icon in navbar
             </label>
@@ -735,7 +735,7 @@ export default function SettingsPage() {
                           onChange={(e) =>
                             updateField("heroBgColor", e.target.value)
                           }
-                          className="h-10 w-10 cursor-pointer rounded border border-neutral-300 p-0"
+                          className="h-10 w-10 cursor-pointer rounded border border-neutral-300 p-0 dark:border-neutral-600"
                         />
                         <Input
                           value={settings.heroBgColor}
@@ -1028,7 +1028,7 @@ export default function SettingsPage() {
                               return { ...prev, scripts: next };
                             });
                           }}
-                          className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                          className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 [&>option]:dark:bg-neutral-900 [&>option]:dark:text-neutral-100"
                           title="Script type"
                         >
                           <option value="js">JS</option>
@@ -1045,7 +1045,7 @@ export default function SettingsPage() {
                               return { ...prev, scripts: next };
                             });
                           }}
-                          className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                          className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 [&>option]:dark:bg-neutral-900 [&>option]:dark:text-neutral-100"
                         >
                           <option value="head">Head</option>
                           <option value="body_start">Body Start</option>

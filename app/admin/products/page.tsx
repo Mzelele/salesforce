@@ -308,7 +308,7 @@ function ProductsContent() {
                     type="checkbox"
                     checked={products.length > 0 && selected.size === products.length}
                     onChange={toggleSelectAll}
-                    className="h-4 w-4 rounded border-neutral-300"
+                    className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800"
                   />
                 </th>
                 <th className="px-4 py-3 text-left font-medium dark:text-white">Image</th>
@@ -349,7 +349,7 @@ function ProductsContent() {
                         type="checkbox"
                         checked={selected.has(product._id)}
                         onChange={() => toggleSelect(product._id)}
-                        className="h-4 w-4 rounded border-neutral-300"
+                        className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -564,7 +564,7 @@ function ProductsContent() {
                 type="checkbox"
                 checked={deletePermanent}
                 onChange={(e) => setDeletePermanent(e.target.checked)}
-                className="h-4 w-4 rounded border-neutral-300"
+                className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800"
               />
               Permanently delete (skip archive)
             </label>

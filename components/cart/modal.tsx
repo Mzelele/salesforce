@@ -86,8 +86,8 @@ export default function CartModal() {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 p-6 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#E1F3FF" }}>
-              <div className="flex items-center justify-between">
+            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#EEF4F8" }}>
+              <div className="flex items-center justify-between px-4 py-4 md:px-6">
                 <p className="text-lg font-semibold">My Cart</p>
                 <button aria-label="Close cart" onClick={closeCart}>
                   <CloseCart />
@@ -111,8 +111,9 @@ export default function CartModal() {
                   </Link>
                 </div>
               ) : (
-                <div className="flex h-full flex-col justify-between overflow-hidden p-1">
-                  <ul className="grow overflow-auto py-4 border-b border-neutral-200">
+                <div className="flex h-full flex-col justify-between overflow-hidden px-4 pb-4 md:px-6">
+                  <div className="grow overflow-auto rounded-xl border border-neutral-200 bg-white shadow-sm">
+                    <ul className="divide-y divide-neutral-200">
                     {cart.lines
                       .sort((a, b) =>
                         a.merchandise.product.title.localeCompare(
@@ -140,9 +141,9 @@ export default function CartModal() {
                         return (
                           <li
                             key={i}
-                            className="flex w-full flex-col border-b border-neutral-300"
+                            className="flex w-full flex-col"
                           >
-                            <div className="relative flex w-full flex-row justify-between px-1 py-4">
+                            <div className="relative flex w-full flex-row justify-between px-3 py-4">
                               <div className="absolute z-40 -ml-1 -mt-2">
                                 <DeleteItemButton
                                   item={item}
@@ -195,7 +196,7 @@ export default function CartModal() {
                                     item.cost.totalAmount.currencyCode
                                   }
                                 />
-                                <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-300">
+                                <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-300 bg-white">
                                   <EditItemQuantityButton
                                     item={item}
                                     type="minus"
@@ -217,24 +218,25 @@ export default function CartModal() {
                           </li>
                         );
                       })}
-                  </ul>
-                  <div className="py-4 text-sm text-neutral-600">
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-300 pb-1 pt-1">
-                      <p className="text-neutral-900">Total</p>
+                    </ul>
+                  </div>
+                  <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <p className="text-base font-medium text-neutral-900">Total</p>
                       <Price
-                        className="text-right text-base text-neutral-900"
+                        className="text-right text-base font-semibold text-neutral-900"
                         amount={cart.cost.totalAmount.amount}
                         currencyCode={cart.cost.totalAmount.currencyCode}
                       />
                     </div>
+                    <Link
+                      href="/checkout"
+                      onClick={handleCheckout}
+                      className="mt-4 block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+                    >
+                      Proceed to Checkout
+                    </Link>
                   </div>
-                  <Link
-                    href="/checkout"
-                    onClick={handleCheckout}
-                    className="block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
-                  >
-                    Proceed to Checkout
-                  </Link>
                 </div>
               )}
             </Dialog.Panel>

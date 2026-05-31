@@ -501,7 +501,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           <div className="space-y-2">
             <Label>Key Features</Label>
             <textarea
-              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400"
               rows={3}
               placeholder="Key features or selling points (e.g. Water resistant, Stainless steel, Free delivery...)"
               value={form.productHighlights}
@@ -610,7 +610,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           <div className="space-y-2">
             <Label>Key Features</Label>
             <textarea
-              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-400"
               rows={3}
               placeholder="Key features or selling points (e.g. Water resistant, Stainless steel, Free delivery...)"
               value={form.productHighlights}
@@ -980,7 +980,7 @@ function AttributeValuesInput({
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             placeholder={attr.values.length === 0 ? "Type value & press Enter" : ""}
-            className="flex-1 min-w-[80px] bg-transparent text-sm outline-none placeholder:text-neutral-400 py-1"
+            className="flex-1 min-w-[80px] bg-transparent text-sm text-neutral-900 outline-none placeholder:text-neutral-400 dark:text-neutral-100 dark:placeholder:text-neutral-500 py-1"
           />
         </div>
       </div>

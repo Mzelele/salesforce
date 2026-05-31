@@ -1,10 +1,11 @@
 "use client";
 
 import LogoSquare from "components/logo-square";
-import { Collection } from "lib/sfcc/types";
+import { Collection, Menu } from "lib/sfcc/types";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Suspense } from "react";
+import MenuDrawer from "./menu-drawer";
 import Search, { SearchSkeleton } from "./search";
 
 const CartModal = dynamic(() => import("components/cart/modal"), { ssr: false });
@@ -12,10 +13,12 @@ const CartModal = dynamic(() => import("components/cart/modal"), { ssr: false })
 export function Navbar({
   menu,
   categories,
+  pages = [],
   settings,
 }: {
   menu: any[];
   categories: Collection[];
+  pages?: Menu[];
   settings: Record<string, any>;
 }) {
   const iconUrl = settings.faviconUrl && settings.faviconUrl !== "/favicon.ico" ? settings.faviconUrl : undefined;
@@ -27,28 +30,8 @@ export function Navbar({
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 md:gap-4">
           {/* Left: Hamburger Menu + Logo */}
           <div className="flex items-center gap-1.5 md:gap-4">
-            {/* Hamburger Dropdown Menu */}
-            <div className="group relative">
-              <button className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-200 text-neutral-900 transition-colors hover:bg-neutral-50 md:h-11 md:w-11">
-                <svg className="h-5 w-5 md:h-6 md:w-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              <div className="absolute left-0 top-full z-50 hidden min-w-[280px] rounded-lg border border-neutral-200 bg-white py-2 shadow-lg group-hover:block">
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.handle}
-                    href={`/category/${cat.handle}`}
-                    className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
-                  >
-                    <span className="text-lg">📦</span>
-                    <span className="text-neutral-900">{cat.title}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            {/* Hamburger Drawer Menu */}
+            <MenuDrawer categories={categories} pages={pages} />
 
             {/* Logo */}
             <Link

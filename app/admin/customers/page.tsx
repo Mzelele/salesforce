@@ -128,7 +128,7 @@ export default function CustomersPage() {
                     type="checkbox"
                     checked={customers.length > 0 && selectedIds.size === customers.length}
                     onChange={toggleSelectAll}
-                    className="h-4 w-4 rounded border-neutral-300"
+                    className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800"
                   />
                 </th>
                 <th className="px-4 py-3 text-left font-medium dark:text-white">Name</th>
@@ -165,7 +165,7 @@ export default function CustomersPage() {
                           type="checkbox"
                           checked={selectedIds.has(customer._id)}
                           onChange={() => toggleSelect(customer._id)}
-                          className="h-4 w-4 rounded border-neutral-300"
+                          className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800"
                         />
                       </td>
                       <td className="px-4 py-3 font-medium">{customer.name || "—"}</td>

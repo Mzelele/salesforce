@@ -1,13 +1,17 @@
 "use client";
 
+import type { AdminTheme } from "@/components/admin/admin-shell";
 import { Button } from "@/components/ui/button";
 import { LogOut, Moon, Sun } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useTheme } from "next-themes";
 
-export default function Topbar() {
-  const { theme, setTheme } = useTheme();
-
+export default function Topbar({
+  theme,
+  setTheme,
+}: {
+  theme: AdminTheme;
+  setTheme: (theme: AdminTheme) => void;
+}) {
   return (
     <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white pl-14 pr-4 dark:border-neutral-700 dark:bg-neutral-900 md:pl-6 md:pr-6">
       <div />

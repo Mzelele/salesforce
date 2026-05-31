@@ -108,9 +108,10 @@ export default async function StorefrontLayout({
 }: {
   children: ReactNode;
 }) {
-  const [settings, menu, categories] = await Promise.all([
+  const [settings, menu, footerMenu, categories] = await Promise.all([
     getStoreSettings(),
     getMenu("next-js-frontend-header-menu"),
+    getMenu("next-js-frontend-footer-menu"),
     getAllCategories(),
   ]);
 
@@ -125,7 +126,7 @@ export default async function StorefrontLayout({
       <CartProvider>
         <div className="flex min-h-screen flex-col">
           <AnnouncementBar />
-          <Navbar menu={menu} categories={categories} settings={settings} />
+          <Navbar menu={menu} categories={categories} pages={footerMenu} settings={settings} />
           <main className="flex-1" style={{ backgroundColor: "#E1F3FF" }}>
             {children}
           </main>

@@ -16,7 +16,7 @@ export default function OrderStatusBadge({ status }: { status: string }) {
     <span
       className={clsx(
         "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize",
-        statusStyles[status] || "bg-neutral-100 text-neutral-800"
+        statusStyles[status] || "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
       )}
     >
       {status}

@@ -760,7 +760,7 @@ function EditorToolbar() {
                 value={mediaUrl}
                 onChange={(event) => setMediaUrl(event.target.value)}
                 placeholder={`Paste ${activeMedia === "image" ? "image" : "video"} URL`}
-                className="h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm outline-none focus:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950"
+                className="h-10 w-full rounded-md border border-neutral-200 bg-white px-3 text-sm text-neutral-900 placeholder:text-neutral-500 outline-none focus:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100 dark:placeholder:text-neutral-400"
               />
               <div className="flex items-center gap-2">
                 <Button
