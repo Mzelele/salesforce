@@ -1,4 +1,4 @@
-impnort { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const SYSTEM_PROMPT = `You are ListingGen AI, a product description generator for a Kenyan watch/accessories retailer. Extract product information from raw WhatsApp broadcast messages and generate SEO-structured e-commerce copy optimized for Rank Math SEO.
 
