@@ -29,7 +29,7 @@ export function Gallery({
   return (
     <form className={clsx("flex flex-col lg:grid lg:gap-4", hasMultipleImages ? "lg:grid-cols-[5rem_1fr]" : "lg:grid-cols-[1fr]")}>
       {hasMultipleImages ? (
-        <div className="relative order-2 mt-2 lg:order-1 lg:mt-0">
+        <div className="relative order-2 mt-1 lg:order-1 lg:mt-0">
           <button
             type="button"
             className="scrollbar-hide absolute -top-2 left-1/2 z-10 hidden -translate-x-1/2 rounded-full border border-neutral-200 bg-white p-1 text-neutral-700 shadow-sm lg:block"
@@ -47,7 +47,7 @@ export function Gallery({
                 const isActive = index === imageIndex;
 
                 return (
-                  <li key={image.src} className="h-14 w-14 flex-none snap-start lg:h-20 lg:w-20">
+                  <li key={image.src} className="h-12 w-12 flex-none snap-start lg:h-20 lg:w-20">
                     <button
                       formAction={() => {
                         const newState = updateImage(index.toString());
@@ -80,7 +80,7 @@ export function Gallery({
         </div>
       ) : null}
 
-      <div className={clsx("relative mt-2 aspect-square w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 md:mt-0 lg:max-h-[400px]", hasMultipleImages && "lg:order-2")}>
+      <div className={clsx("relative mt-1 aspect-[4/3] max-h-[44vh] w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 md:mt-0 lg:aspect-square lg:max-h-[400px]", hasMultipleImages && "lg:order-2")}>
         {images[imageIndex] && (
           <Image
             className="h-full w-full object-contain"

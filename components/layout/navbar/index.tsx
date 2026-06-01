@@ -4,6 +4,7 @@ import LogoSquare from "components/logo-square";
 import { Collection, Menu } from "lib/sfcc/types";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import MenuDrawer from "./menu-drawer";
 import Search, { SearchSkeleton } from "./search";
@@ -22,6 +23,8 @@ export function Navbar({
   settings: Record<string, any>;
 }) {
   const iconUrl = settings.faviconUrl && settings.faviconUrl !== "/favicon.ico" ? settings.faviconUrl : undefined;
+  const pathname = usePathname();
+  const isProductPage = pathname?.startsWith("/product/") ?? false;
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-sm">
@@ -118,11 +121,13 @@ export function Navbar({
         </div>
 
         {/* Mobile search */}
-        <div className="mt-2 block border-t border-neutral-200 pt-2 md:hidden">
-          <Suspense fallback={<SearchSkeleton />}>
-            <Search />
-          </Suspense>
-        </div>
+        {!isProductPage && (
+          <div className="mt-2 block border-t border-neutral-200 pt-2 md:hidden">
+            <Suspense fallback={<SearchSkeleton />}>
+              <Search />
+            </Suspense>
+          </div>
+        )}
       </div>
     </nav>
   );

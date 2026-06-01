@@ -90,7 +90,7 @@ export default function MenuDrawer({
               <div className="flex border-b border-neutral-200">
                 <button
                   onClick={() => setTab("categories")}
-                  className={`flex-1 border-b-2 px-4 py-3 text-sm font-semibold uppercase tracking-wide transition-colors ${
+                  className={`flex-1 border-b-2 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide transition-colors ${
                     tab === "categories"
                       ? "border-red-600 text-neutral-900"
                       : "border-transparent text-neutral-400 hover:text-neutral-600"
@@ -100,13 +100,13 @@ export default function MenuDrawer({
                 </button>
                 <button
                   onClick={() => setTab("account")}
-                  className={`flex-1 border-b-2 px-4 py-3 text-sm font-semibold uppercase tracking-wide transition-colors ${
+                  className={`flex-1 border-b-2 px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide transition-colors ${
                     tab === "account"
                       ? "border-red-600 text-neutral-900"
                       : "border-transparent text-neutral-400 hover:text-neutral-600"
                   }`}
                 >
-                  My Account
+                  Quick Links
                 </button>
               </div>
 
@@ -143,7 +143,7 @@ export default function MenuDrawer({
                           href={page.path}
                           prefetch={true}
                           onClick={closeDrawer}
-                          className="border-b border-neutral-100 px-4 py-3.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
+                          className="border-b border-neutral-100 px-4 py-3.5 text-sm font-semibold uppercase tracking-wide text-neutral-900 transition-colors hover:bg-neutral-50"
                         >
                           {page.title}
                         </Link>

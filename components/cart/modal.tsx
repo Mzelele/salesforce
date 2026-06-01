@@ -87,11 +87,14 @@ export default function CartModal() {
             leaveTo="translate-x-full"
           >
             <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#EEF4F8" }}>
-              <div className="flex items-center justify-between px-4 py-4 md:px-6">
-                <p className="text-lg font-semibold">My Cart</p>
-                <button aria-label="Close cart" onClick={closeCart}>
-                  <CloseCart />
-                </button>
+              {/* Header with divider */}
+              <div className="border-b border-neutral-300 px-4 py-4 md:px-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold">My Cart</p>
+                  <button aria-label="Close cart" onClick={closeCart}>
+                    <CloseCart />
+                  </button>
+                </div>
               </div>
 
               {!cart || cart.lines.length === 0 ? (
@@ -111,9 +114,10 @@ export default function CartModal() {
                   </Link>
                 </div>
               ) : (
-                <div className="flex h-full flex-col justify-between overflow-hidden px-4 pb-4 md:px-6">
-                  <div className="grow overflow-auto rounded-xl border border-neutral-200 bg-white shadow-sm">
-                    <ul className="divide-y divide-neutral-200">
+                <div className="flex h-full flex-col justify-between overflow-hidden">
+                  {/* Product list - full width, no side padding */}
+                  <div className="grow overflow-auto">
+                    <ul className="divide-y divide-neutral-200/70">
                     {cart.lines
                       .sort((a, b) =>
                         a.merchandise.product.title.localeCompare(
@@ -143,7 +147,7 @@ export default function CartModal() {
                             key={i}
                             className="flex w-full flex-col"
                           >
-                            <div className="relative flex w-full flex-row justify-between px-3 py-4">
+                            <div className="relative flex w-full flex-row justify-between px-3 py-4 md:px-6">
                               <div className="absolute z-40 -ml-1 -mt-2">
                                 <DeleteItemButton
                                   item={item}
@@ -220,7 +224,8 @@ export default function CartModal() {
                       })}
                     </ul>
                   </div>
-                  <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+                  {/* Checkout footer - full width */}
+                  <div className="bg-white px-4 py-4 md:px-6">
                     <div className="flex items-center justify-between">
                       <p className="text-base font-medium text-neutral-900">Total</p>
                       <Price
@@ -229,10 +234,11 @@ export default function CartModal() {
                         currencyCode={cart.cost.totalAmount.currencyCode}
                       />
                     </div>
+                    <div className="my-4 border-t border-neutral-300" />
                     <Link
                       href="/checkout"
                       onClick={handleCheckout}
-                      className="mt-4 block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+                      className="block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
                     >
                       Proceed to Checkout
                     </Link>

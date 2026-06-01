@@ -3,6 +3,11 @@
 @plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/typography";
 
+/* Make dark mode opt-in (class-based) so storefront stays light
+   regardless of the user's OS color-scheme. Admin opts in via the
+   `.dark` class on its layout. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   *,
   ::after,

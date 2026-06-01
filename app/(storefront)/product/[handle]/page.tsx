@@ -156,14 +156,54 @@ export default async function ProductPage(props: {
           value={viewContentPrice}
           currency={product.currencyCode}
         />
-        <div className="mx-auto mt-0 w-full max-w-none px-0 pb-24 md:px-4 md:pb-0 lg:max-w-(--breakpoint-5xl)">
+
+        <div className="mx-auto w-full max-w-none px-0 pb-24 md:px-4 md:pb-6 lg:max-w-(--breakpoint-5xl)">
           <Breadcrumbs items={breadcrumbItems} centerOnMobile />
           <ProductProvider>
-            <div className="grid gap-4 px-3 md:px-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] lg:items-start">
+
+
+            {/* ── MOBILE: compact stacked layout ── */}
+            <div className="lg:hidden">
+              {/* Image */}
+              <div className="bg-white px-2 pt-0.5 pb-0">
+                <Suspense
+                  fallback={
+                    <div className="relative w-full aspect-[4/3] max-h-[48vw] overflow-hidden rounded-xl bg-neutral-100" />
+                  }
+                >
+                  <Gallery
+                    images={product.images.slice(0, 5).map((image: Image) => ({
+                      src: image.url,
+                      altText: image.altText,
+                    }))}
+                  />
+                </Suspense>
+              </div>
+
+              {/* Title + Price + Variants + Actions all in one block */}
+              <div className="bg-white px-3 pt-1.5 pb-3 border-t border-neutral-100">
+                <Suspense fallback={null}>
+                  <ProductDescription product={product} compact />
+                </Suspense>
+                <div className="mt-2.5">
+                  <Suspense fallback={null}>
+                    <ProductActions
+                      product={product}
+                      whatsappPhone={settings.whatsappPhone || settings.storePhone}
+                      storePhone={settings.storePhone}
+                    />
+                  </Suspense>
+                </div>
+              </div>
+            </div>
+
+            {/* ── DESKTOP: 3-column grid ── */}
+            <div className="hidden lg:grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] lg:items-start">
               <div className="rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm md:p-4">
                 <Suspense
                   fallback={
-                    <div className="relative aspect-square h-full max-h-[280px] w-full overflow-hidden rounded-xl bg-neutral-100 lg:max-h-[400px]" />
+
+                    <div className="relative aspect-square h-full max-h-[400px] w-full overflow-hidden rounded-xl bg-neutral-100" />
                   }
                 >
                   <Gallery
@@ -191,10 +231,13 @@ export default async function ProductPage(props: {
                 </Suspense>
               </div>
             </div>
+
           </ProductProvider>
           {product.descriptionHtml ? (
-            <div className="mx-3 mt-4 mb-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:mx-0 md:mt-6 md:mb-6 md:p-8">
-              <h2 className="mb-3 text-2xl font-bold text-neutral-900 md:mb-4">Product Description</h2>
+
+
+            <div className="mx-3 mt-3 mb-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:mx-0 md:mt-6 md:mb-6 md:p-8">
+              <h2 className="mb-2 text-lg font-bold text-neutral-900 md:mb-4 md:text-2xl">Product Description</h2>
               <Prose
                 className="text-sm leading-relaxed text-neutral-700"
                 html={product.descriptionHtml}
