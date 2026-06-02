@@ -27,7 +27,7 @@ export function Breadcrumbs({ items, verticalOnMobile = false, centerOnMobile = 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav aria-label="Breadcrumb" className="py-1">
+      <nav aria-label="Breadcrumb" className="py-0">
         <ol className={clsx("flex items-center gap-1 text-xs text-neutral-600", centerOnMobile ? "justify-center sm:justify-start" : "justify-start", verticalOnMobile ? "flex-col sm:flex-row sm:flex-wrap" : "flex-wrap")}>
           {items.map((item, index) => (
             <li key={index} className="flex items-center gap-1">

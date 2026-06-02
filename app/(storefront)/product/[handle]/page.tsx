@@ -165,6 +165,8 @@ export default async function ProductPage(props: {
             {/* ── MOBILE: compact stacked layout ── */}
             <div className="lg:hidden">
               {/* Image */}
+
+
               <div className="bg-white px-2 pt-0.5 pb-0">
                 <Suspense
                   fallback={
@@ -198,37 +200,75 @@ export default async function ProductPage(props: {
             </div>
 
             {/* ── DESKTOP: 3-column grid ── */}
-            <div className="hidden lg:grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] lg:items-start">
-              <div className="rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm md:p-4">
-                <Suspense
-                  fallback={
 
-                    <div className="relative aspect-square h-full max-h-[400px] w-full overflow-hidden rounded-xl bg-neutral-100" />
-                  }
-                >
-                  <Gallery
-                    images={product.images.slice(0, 5).map((image: Image) => ({
-                      src: image.url,
-                      altText: image.altText,
-                    }))}
-                  />
-                </Suspense>
+
+
+
+            <div className="hidden lg:grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] lg:auto-rows-[minmax(0,1fr)] lg:items-stretch">
+
+
+              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
+                <div className="flex-1 p-3 md:p-4">
+                  <Suspense
+                    fallback={
+
+
+
+
+
+
+
+
+
+
+
+                      <div className="relative aspect-square h-full max-h-[400px] w-full overflow-hidden rounded-xl bg-neutral-100" />
+                    }
+                  >
+                    <Gallery
+                      images={product.images.slice(0, 5).map((image: Image) => ({
+                        src: image.url,
+                        altText: image.altText,
+                      }))}
+                    />
+                  </Suspense>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:p-5">
-                <Suspense fallback={null}>
-                  <ProductDescription product={product} />
-                </Suspense>
+
+
+
+
+
+
+              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
+                <div className="flex-1 p-4 md:p-5">
+                  <Suspense fallback={null}>
+                    <ProductDescription product={product} />
+                  </Suspense>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:p-5">
-                <Suspense fallback={null}>
-                  <ProductActions
-                    product={product}
-                    whatsappPhone={settings.whatsappPhone || settings.storePhone}
-                    storePhone={settings.storePhone}
-                  />
-                </Suspense>
+
+
+
+
+
+
+
+
+
+
+              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
+                <div className="flex-1 p-4 md:p-5">
+                  <Suspense fallback={null}>
+                    <ProductActions
+                      product={product}
+                      whatsappPhone={settings.whatsappPhone || settings.storePhone}
+                      storePhone={settings.storePhone}
+                    />
+                  </Suspense>
+                </div>
               </div>
             </div>
 

@@ -5,14 +5,14 @@ import { Suspense } from "react";
 
 export default async function Footer() {
   const skeleton =
-    "w-16 h-4 animate-pulse rounded-sm bg-neutral-200 dark:bg-neutral-700";
+    "w-16 h-4 animate-pulse rounded-sm bg-neutral-700";
   const [menu, settings] = await Promise.all([
     getMenu("next-js-frontend-footer-menu"),
     getStoreSettings(),
   ]);
 
   return (
-    <footer className="border-t border-neutral-200 py-5 text-sm text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
+    <footer className="bg-neutral-900 border-t border-neutral-800 py-5 text-sm text-neutral-300">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4">
         <Suspense
           fallback={
@@ -25,10 +25,11 @@ export default async function Footer() {
         >
           <FooterMenu menu={menu} className="flex flex-wrap items-center justify-center" />
         </Suspense>
-        <p className="text-sm text-neutral-400 dark:text-neutral-500">
+        <p className="text-sm text-neutral-400">
           &copy; {new Date().getFullYear()} {settings.storeName}. All rights reserved.
         </p>
       </div>
     </footer>
   );
 }
+

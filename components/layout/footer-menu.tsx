@@ -15,12 +15,12 @@ function FooterMenuItem({ item }: { item: Menu }) {
   }, [pathname, item.path]);
 
   return (
-    <Link
+        <Link
       href={item.path}
       className={clsx(
-        "block py-1 text-sm underline-offset-4 hover:text-black hover:underline dark:hover:text-neutral-300",
+        "block py-1 text-sm underline-offset-4 text-neutral-300 hover:text-white hover:underline",
         {
-          "text-black dark:text-neutral-300": active,
+          "text-white": active,
         },
       )}
     >
@@ -40,7 +40,7 @@ export default function FooterMenu({ menu, className }: { menu: Menu[]; classNam
             <li key={item.title} className="flex items-center">
               <FooterMenuItem item={item} />
               {index < menu.length - 1 && (
-                <span className="mx-2 text-neutral-300 dark:text-neutral-600">|</span>
+                <span className="mx-2 text-neutral-600">|</span>
               )}
             </li>
           );
@@ -49,3 +49,4 @@ export default function FooterMenu({ menu, className }: { menu: Menu[]; classNam
     </nav>
   );
 }
+

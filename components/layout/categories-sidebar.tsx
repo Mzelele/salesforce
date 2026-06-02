@@ -1,19 +1,19 @@
 "use client";
 
 import {
-    Armchair,
-    ChevronRight,
-    CookingPot,
-    Gamepad2,
-    Home,
-    Monitor,
-    Plug,
-    Scissors,
-    ShoppingBasket,
-    Smartphone,
-    Speaker,
-    Tv,
-    Watch,
+  Armchair,
+  ChevronRight,
+  CookingPot,
+  Gamepad2,
+  Home,
+  Monitor,
+  Plug,
+  Scissors,
+  ShoppingBasket,
+  Smartphone,
+  Speaker,
+  Tv,
+  Watch,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -48,7 +48,7 @@ export function CategoriesSidebar({
 }) {
   return (
     <div className="hidden lg:block">
-      <div className="flex h-[392px] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+      <div className="flex h-[392px] flex-col overflow-hidden rounded-sm border border-neutral-200 bg-white shadow-sm">
         <div className="shrink-0 border-b border-neutral-200 px-4 py-3">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-900">
             Categories

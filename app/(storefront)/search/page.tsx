@@ -26,7 +26,8 @@ export default async function SearchPage(props: {
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-4">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
-      <div className="mb-6 flex items-end gap-2 border-b border-neutral-200 pb-3 sm:gap-3">
+
+      <div className="mb-6 flex items-center gap-2 border-b border-neutral-200 py-3 sm:gap-3">
         {searchValue ? (
           <p className="text-sm text-neutral-900">
             {products.length === 0

@@ -46,8 +46,6 @@ function CategoryArtwork({ category }: { category: Category }) {
 }
 
 function CategoryTile({ category, index }: { category: Category; index: number }) {
-  const hasImage = !!category.image;
-
   return (
     <Link
       href={`/category/${category.slug}`}
@@ -55,10 +53,7 @@ function CategoryTile({ category, index }: { category: Category; index: number }
     >
       <div
         className={clsx(
-          "flex h-[76px] w-[76px] items-center justify-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] md:h-[158px] md:w-[158px] lg:h-[164px] lg:w-[164px]",
-          hasImage
-            ? "overflow-hidden bg-white ring-1 ring-neutral-200 md:ring-2"
-            : circleThemes[index % circleThemes.length],
+          "flex h-[76px] w-[76px] items-center justify-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] md:h-[158px] md:w-[158px] lg:h-[164px] lg:w-[164px] overflow-hidden bg-white ring-1 ring-neutral-300 md:ring-2 md:ring-neutral-300"
         )}
       >
         <CategoryArtwork category={category} />
@@ -106,9 +101,9 @@ export function CategoryCircles({ categories }: { categories: Category[] }) {
   if (!visibleCategories.length) return null;
 
   return (
-    <section className="w-full bg-[#F6F0E4] pb-1 pt-2 md:pb-2 md:pt-4 lg:pb-2 lg:pt-4">
+    <section className="w-full bg-white pb-1 pt-3 md:pb-2 md:pt-5 lg:pb-2 lg:pt-5">
       <div className="mx-auto max-w-7xl px-1.5 md:px-3 lg:px-4">
-        <div className="relative flex items-start">
+        <div className="relative flex items-center">
           <button
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}

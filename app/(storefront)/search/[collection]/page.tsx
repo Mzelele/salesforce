@@ -53,7 +53,8 @@ export default async function CategoryPage(props: {
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-4">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: collection.title }]} />
-      <div className="mb-6 flex items-end gap-2 border-b border-neutral-200 pb-3 dark:border-neutral-700 sm:gap-3">
+
+      <div className="mb-6 flex items-center gap-2 border-b border-neutral-200 pb-3 dark:border-neutral-700 sm:gap-3">
         <h1 className="text-2xl font-bold">{collection.title}</h1>
         <div className="min-w-0 flex-1 sm:ml-auto sm:flex-none">
           <FilterList list={sorting} title="Sort by" horizontal />

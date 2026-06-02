@@ -34,19 +34,26 @@ export default async function Page(props: {
   if (!page) return notFound();
 
   return (
-    <>
-      <h1 className="mb-8 text-5xl font-bold">{page.title}</h1>
-      <Prose className="mb-8" html={page.body} />
-      <p className="text-sm italic">
-        {`This document was last updated on ${new Intl.DateTimeFormat(
-          undefined,
-          {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          },
-        ).format(new Date(page.updatedAt))}.`}
-      </p>
-    </>
+    <div className="mx-auto max-w-5xl px-3 py-4 sm:px-4 sm:py-6 lg:py-8">
+      <article className="overflow-hidden rounded-2xl border border-white/60 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] sm:rounded-3xl">
+        <div className="px-5 py-6 sm:px-8 sm:py-8 md:px-12 md:py-10">
+          <header className="mb-6 border-b border-neutral-100 pb-5 sm:mb-8">
+            <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl md:text-4xl">
+              {page.title}
+            </h1>
+            <p className="mt-2 text-sm font-medium text-neutral-400">
+              Last updated on{" "}
+              {new Intl.DateTimeFormat(undefined, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }).format(new Date(page.updatedAt))}
+            </p>
+          </header>
+
+          <Prose className="max-w-none" html={page.body} />
+        </div>
+      </article>
+    </div>
   );
 }

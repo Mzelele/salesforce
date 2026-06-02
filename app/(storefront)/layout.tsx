@@ -128,6 +128,12 @@ export default async function StorefrontLayout({
           <AnnouncementBar />
           <Navbar menu={menu} categories={categories} pages={footerMenu} settings={settings} />
           <main className="flex-1" style={{ backgroundColor: "#E1F3FF" }}>
+
+
+
+
+
+
             {children}
           </main>
           <Footer />
