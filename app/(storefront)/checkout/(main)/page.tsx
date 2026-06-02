@@ -131,9 +131,12 @@ export default function CheckoutPage() {
     }
   };
 
-  return (
-    <div className="grid gap-8 md:grid-cols-2 items-start">
-      <form onSubmit={handleSubmit} className="space-y-4">
+
+
+    return (
+    <div className="grid gap-8 md:grid-cols-2 items-start overflow-x-hidden">
+
+      <form onSubmit={handleSubmit} className="space-y-4 min-w-0">
         {errors.form && (
           <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-300">
             {errors.form}
@@ -267,13 +270,15 @@ export default function CheckoutPage() {
 
 
             {/* Order Summary - compact */}
-      <div className="rounded-lg border border-neutral-200 bg-white shadow-sm">
+
+      <div className="rounded-lg border border-neutral-200 bg-white shadow-sm min-w-0 overflow-hidden">
         <div className="border-b border-neutral-100 px-4 py-3">
           <h2 className="text-base font-semibold text-neutral-900">Order Summary</h2>
         </div>
         <div className="divide-y divide-neutral-100 px-4 py-2">
           {cart.lines.map((line, i) => (
-            <div key={i} className="flex items-center gap-3 py-2">
+
+            <div key={i} className="flex items-center gap-3 py-2 min-w-0">
               <div className="relative h-12 w-12 flex-none overflow-hidden rounded border border-neutral-200 bg-neutral-50">
                 <Image
                   src={

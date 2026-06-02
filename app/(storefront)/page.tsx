@@ -96,7 +96,8 @@ export default async function HomePage() {
       <HeroSection categories={categorySummaries} />
       <CategoryCircles categories={categorySummaries} />
       <CategorySections
-        categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title }))}
+
+        categories={categoriesWithProducts.map((c) => ({ slug: c.handle, name: c.title, description: c.description }))}
         initialData={initialData}
       />
       {brands.length > 0 && <BrandCarousel brands={brands} />}

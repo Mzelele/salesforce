@@ -8,6 +8,7 @@ import Link from "next/link";
 interface CategoryData {
   slug: string;
   name: string;
+  description?: string;
 }
 
 interface CategorySectionsProps {
@@ -39,9 +40,11 @@ export default function CategorySections({ categories, initialData }: CategorySe
               <div className={`flex items-center justify-between gap-3 px-3 py-2 text-white md:gap-4 md:px-5 md:py-2.5 ${headerThemes[sectionIndex % headerThemes.length]}`}>
                 <div className="flex min-w-0 items-center gap-1.5 md:gap-3">
                   <h2 className="truncate text-base font-bold md:text-2xl">{cat.name}</h2>
-                  <p className="hidden truncate text-xs font-medium text-white/85 sm:block md:text-sm">
-                    Discover our latest collection
-                  </p>
+                  {cat.description ? (
+                    <p className="hidden truncate text-xs font-medium text-white/85 sm:block md:text-sm">
+                      {cat.description}
+                    </p>
+                  ) : null}
                 </div>
                 <Link
                   href={`/product-category/${cat.slug}`}
