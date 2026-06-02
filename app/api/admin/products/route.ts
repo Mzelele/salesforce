@@ -20,6 +20,41 @@ async function detectBrand(title: string) {
   }
 }
 
+// Detect category by matching title/description against existing category names, slugs or keywords
+async function detectCategory(text: string) {
+  try {
+    const db = await connectDB();
+    const categories = await db.collection("categories").find().toArray();
+    if (!categories.length) return null;
+    const normalized = (text || "").toLowerCase();
+
+    // exact or whole-word matches against name or slug, also match against a `keywords` field if present
+    for (const cat of categories) {
+      const name = (cat.name || "").toLowerCase();
+      const slug = (cat.slug || "").toLowerCase();
+
+      // match name as whole word or as substring in longer names
+      const nameRegex = new RegExp("\\b" + name.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&") + "\\b", "i");
+      if (name && nameRegex.test(normalized)) return cat._id.toString();
+
+      if (slug && normalized.includes(slug)) return cat._id.toString();
+
+      // support a keywords field if categories store synonyms
+      const keywords = Array.isArray(cat.keywords) ? cat.keywords : (cat.keywords ? String(cat.keywords).split(",") : []);
+      for (const kw of keywords) {
+        const k = (kw || "").toLowerCase().trim();
+        if (!k) continue;
+        const kwRegex = new RegExp("\\b" + k.replace(/[.*+?^${}()|[\\]\\]\\\\]/g, "\\$&") + "\\b", "i");
+        if (kwRegex.test(normalized) || normalized.includes(k)) return cat._id.toString();
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 const slugify = (str: string) =>
   str.toLowerCase().trim()
     .replace(/[''']/g, "")
@@ -100,6 +135,13 @@ export async function POST(req: NextRequest) {
     if (body.name) {
       const detectedBrand = await detectBrand(body.name);
       if (detectedBrand) body.brand = detectedBrand;
+
+      // Attempt to detect category from the name/description when category isn't provided
+      if (!body.category) {
+        const text = `${body.name || ""} ${body.description || ""}`.trim();
+        const detectedCategory = await detectCategory(text);
+        if (detectedCategory) body.category = detectedCategory; // keep as string id; will be converted to ObjectId below
+      }
     }
     if (body.category) {
       body.category = new ObjectId(body.category);
@@ -112,3 +154,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
