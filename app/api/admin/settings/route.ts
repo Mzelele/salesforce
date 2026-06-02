@@ -38,6 +38,8 @@ const defaultSettings = {
   heroBgColor: "#f5f5dc",
   facebookPixelId: "",
   scripts: [],
+  // Navbar theme: false = light, true = dark
+  navbarDark: false,
 };
 
 export async function GET() {

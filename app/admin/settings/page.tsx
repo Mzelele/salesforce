@@ -59,6 +59,7 @@ type SettingsData = {
   heroBgColor: string;
   facebookPixelId: string;
   scripts: ScriptSnippet[];
+  navbarDark: boolean;
 };
 
 const defaultSettings: SettingsData = {
@@ -97,6 +98,7 @@ const defaultSettings: SettingsData = {
   heroBgColor: "#f5f5dc",
   facebookPixelId: "",
   scripts: [],
+  navbarDark: false,
 };
 
 export default function SettingsPage() {
@@ -628,6 +630,17 @@ export default function SettingsPage() {
                 className="w-32"
               />
             </div>
+          </div>
+
+          <div className="flex items-center justify-between rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <div>
+              <p className="font-medium">Navbar dark mode</p>
+              <p className="text-sm text-neutral-500">When enabled the navbar will use a dark theme (black background) with white icons and text.</p>
+            </div>
+            <Switch
+              checked={settings.navbarDark}
+              onCheckedChange={(checked) => updateField("navbarDark", checked)}
+            />
           </div>
           <div className="flex items-center justify-between rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
             <div>

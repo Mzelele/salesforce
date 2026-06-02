@@ -85,6 +85,7 @@ const defaultSettings = {
   heroBgColor: "#f5f5dc",
   facebookPixelId: "",
   scripts: [] as ScriptSnippet[],
+  navbarDark: false,
 };
 
 function migrateOldScripts(settings: any): ScriptSnippet[] {

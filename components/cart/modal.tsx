@@ -18,7 +18,7 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal() {
+export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const openCart = () => setIsOpen(true);
@@ -62,7 +62,7 @@ export default function CartModal() {
   return (
     <>
       <button aria-label="Open cart" onClick={openCart}>
-        <OpenCart quantity={cart?.totalQuantity} />
+        <OpenCart quantity={cart?.totalQuantity} navbarDark={navbarDark} />
       </button>
       <Transition show={isOpen}>
         <Dialog onClose={closeCart} className="relative z-50">
@@ -88,11 +88,11 @@ export default function CartModal() {
           >
             <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#EEF4F8" }}>
               {/* Header with divider */}
-              <div className="border-b border-neutral-300 px-4 py-4 md:px-6">
+              <div className={"border-b px-4 py-4 md:px-6" + (navbarDark ? " border-neutral-700 bg-black" : " border-neutral-300")}>
                 <div className="flex items-center justify-between">
-                  <p className="text-lg font-semibold">My Cart</p>
+                  <p className={navbarDark ? "text-lg font-semibold text-white" : "text-lg font-semibold"}>My Cart</p>
                   <button aria-label="Close cart" onClick={closeCart}>
-                    <CloseCart />
+                    <CloseCart navbarDark={navbarDark} />
                   </button>
                 </div>
               </div>
@@ -253,9 +253,9 @@ export default function CartModal() {
   );
 }
 
-function CloseCart({ className }: { className?: string }) {
+function CloseCart({ navbarDark, className }: { navbarDark?: boolean; className?: string }) {
   return (
-    <div className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-neutral-900 transition-colors">
+    <div className={"relative flex h-11 w-11 items-center justify-center rounded-md transition-colors " + (navbarDark ? "border-neutral-700 text-white" : "border-neutral-200 text-neutral-900") }>
       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
       </svg>

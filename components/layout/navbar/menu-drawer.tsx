@@ -1,6 +1,7 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
+import clsx from "clsx";
 import { Collection, Menu } from "lib/sfcc/types";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -12,9 +13,11 @@ type DrawerTab = "categories" | "account";
 export default function MenuDrawer({
   categories,
   pages,
+  navbarDark,
 }: {
   categories: Collection[];
   pages: Menu[];
+  navbarDark?: boolean;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,7 +37,7 @@ export default function MenuDrawer({
       <button
         onClick={openDrawer}
         aria-label="Open menu"
-        className="flex h-9 w-9 items-center justify-center rounded-md border border-neutral-200 text-neutral-900 transition-colors hover:bg-neutral-50 md:h-11 md:w-11"
+        className={clsx("flex h-9 w-9 items-center justify-center rounded-md md:h-11 md:w-11 transition-colors", navbarDark ? "border-neutral-700 text-white hover:bg-neutral-800" : "border-neutral-200 text-neutral-900 hover:bg-neutral-50")}
       >
         <svg className="h-5 w-5 md:h-6 md:w-6" fill="currentColor" viewBox="0 0 24 24">
           <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
