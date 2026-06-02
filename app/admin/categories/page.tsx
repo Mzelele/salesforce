@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import clsx from "clsx";
-import { ChevronDown, ChevronRight, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Pencil, Plus, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -224,76 +224,40 @@ export default function CategoriesPage() {
     }
   };
 
-  // Build children map for simple nested display
-  const childrenMap: Record<string, Category[]> = {};
-  categories.forEach((c) => {
-    const pid = c.parent?._id?.toString() || "root";
-    if (!childrenMap[pid]) childrenMap[pid] = [];
-    childrenMap[pid].push(c);
-  });
-
-  const sortByPosition = (arr: Category[] = []) => arr.slice().sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-
-  const toggleOpen = (id: string) => {
-    setOpenMap((m) => ({ ...m, [id]: !m[id] }));
-  };
-
-  const renderNode = (node: Category, level = 0) => {
-    const children = sortByPosition(childrenMap[node._id] || []);
-    const isOpen = !!openMap[node._id];
-    return (
-      <>
-        <tr key={node._id} className={`border-b border-neutral-700 ${node.deletedAt ? "opacity-50" : ""}`}>
-          <td className="px-4 py-3 align-top">
-            <div className="relative h-8 w-8 overflow-hidden rounded border border-neutral-700 bg-neutral-900">
-              {node.image ? (
-                <Image src={node.image} alt={node.name} fill className="object-cover" unoptimized />
-              ) : node.emoji ? (
-                <div className="flex h-full w-full items-center justify-center text-sm">{node.emoji}</div>
-              ) : null}
-            </div>
-          </td>
-          <td className="px-4 py-3 text-sm font-semibold text-neutral-100">
-            <div className="flex items-center gap-2">
-              <div style={{ paddingLeft: `${level * 1.25}rem` }} className="flex items-center gap-2">
-                {children.length > 0 ? (
-                  <button
-                    onClick={() => toggleOpen(node._id)}
-                    aria-expanded={isOpen}
-                    className="rounded p-1 text-neutral-300 hover:bg-neutral-800"
-                  >
-                    {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                  </button>
-                ) : (
-                  <span style={{ width: 24 }} />
-                )}
-                <span className={level > 0 ? "text-neutral-400" : "text-neutral-100"}>{node.name}</span>
-                {children.length > 0 && (
-                  <span className="ml-2 text-xs text-neutral-400">({children.length})</span>
-                )}
-                {node.deletedAt && (
-                  <span className="inline-flex rounded-full bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-400">Deleted</span>
-                )}
-              </div>
-            </div>
-          </td>
-          <td className="px-4 py-3 text-neutral-400">{node.slug}</td>
-          <td className="px-4 py-3 text-neutral-400">{node.parent?.name || "-"}</td>
-          <td className="px-4 py-3 text-right">
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="icon" onClick={() => handleEdit(node)}>
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => handleDelete(node)}>
-                <Trash2 className="h-4 w-4 text-red-500" />
-              </Button>
-            </div>
-          </td>
-        </tr>
-        {children.length > 0 && isOpen && children.map((ch) => renderNode(ch, level + 1))}
-      </>
-    );
-  };
+  // Simple flat list renderer (original layout)
+  const renderRowFlat = (cat: Category) => (
+    <tr key={cat._id} className={`border-b border-neutral-100 dark:border-neutral-800 ${cat.deletedAt ? "opacity-50" : ""}`}>
+      <td className="px-4 py-3">
+        <div className="relative h-8 w-8 overflow-hidden rounded border border-neutral-200 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800">
+          {cat.image ? (
+            <Image src={cat.image} alt={cat.name} fill className="object-cover" unoptimized />
+          ) : cat.emoji ? (
+            <div className="flex h-full w-full items-center justify-center text-sm">{cat.emoji}</div>
+          ) : null}
+        </div>
+      </td>
+      <td className="px-4 py-3 text-sm font-semibold text-neutral-900 dark:text-white">
+        <div className="flex items-center gap-2">
+          <span>{cat.name}</span>
+          {cat.deletedAt && (
+            <span className="inline-flex rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Deleted</span>
+          )}
+        </div>
+      </td>
+      <td className="px-4 py-3 text-neutral-500">{cat.slug}</td>
+      <td className="px-4 py-3">{cat.parent?.name || "-"}</td>
+      <td className="px-4 py-3 text-right">
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" size="icon" onClick={() => handleEdit(cat)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => handleDelete(cat)}>
+            <Trash2 className="h-4 w-4 text-red-500" />
+          </Button>
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
     <div className="space-y-6">
@@ -445,16 +409,6 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2">
-        <div />
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={toggleAll}>
-            {allOpen ? 'Collapse all' : 'Expand all'}
-          </Button>
-          <div className="text-sm text-neutral-400">{categories.length} total</div>
-        </div>
-      </div>
-
       <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -479,8 +433,7 @@ export default function CategoriesPage() {
                   </tr>
                 ))
               ) : (
-                // render top-level categories and their children
-                sortByPosition(childrenMap['root'] || []).map((cat) => renderNode(cat, 0))
+                categories.map((cat) => renderRowFlat(cat))
               )}
               {!loading && categories.length === 0 && (
                 <tr>
