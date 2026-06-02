@@ -83,7 +83,7 @@ export function Gallery({
       <div className={clsx("relative mt-1 aspect-square max-h-[44vh] w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 md:mt-0 lg:aspect-square lg:max-h-[400px]", hasMultipleImages && "lg:order-2")}>
         {images[imageIndex] && (
           <Image
-            className="h-full w-full object-contain lg:object-cover"
+            className="h-full w-full object-cover"
 
             fill
             sizes="(min-width: 1024px) 50vw, 100vw"

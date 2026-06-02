@@ -1,57 +1,24 @@
-"use client";
-
+import Price from "components/price";
 import { Product } from "lib/sfcc/types";
-import { useProduct } from "./product-context";
-
-const formatPrice = (amount: number, currencyCode: string) =>
-  `${currencyCode} ${new Intl.NumberFormat("en-KE", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)}`;
 
 export function ProductPrice({ product }: { product: Product }) {
-  const { state } = useProduct();
-  const { priceRange, currencyCode, variants } = product;
+  // Choose variant price or fallback to minVariantPrice
+  const variant = product.variants && product.variants.length > 0
+    ? product.variants.find((v) => v.title === product.defaultVariant) || product.variants[0]
+    : undefined;
 
-  const selectedVariant = variants.find((variant) =>
-    variant.selectedOptions.every(
-      (option) => option.value === state[option.name.toLowerCase()],
-    ),
-  );
-
-  const priceAmount = Number(
-    selectedVariant?.price.amount || priceRange.minVariantPrice.amount,
-  );
-  const maxPriceAmount = Number(priceRange.maxVariantPrice.amount);
-  const compareAmount = Number(product.comparePrice?.amount || 0);
-  const hasRange = !selectedVariant && priceAmount !== maxPriceAmount;
-  const hasDiscount = compareAmount > priceAmount;
-  const savingsAmount = hasDiscount ? compareAmount - priceAmount : 0;
-  const discountPercent = hasDiscount
-    ? Math.round((savingsAmount / compareAmount) * 100)
-    : 0;
+  const price = variant?.price?.amount || product.priceRange?.minVariantPrice?.amount || undefined;
+  const compare = product.comparePrice?.amount;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-left">
-      <span className="text-xl font-bold text-blue-600 md:text-2xl">
-        {hasRange
-          ? `${formatPrice(priceAmount, currencyCode)} - ${formatPrice(maxPriceAmount, currencyCode)}`
-          : formatPrice(priceAmount, currencyCode)}
-      </span>
-      {hasDiscount ? (
-        <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm">
-          <span className="text-neutral-500 line-through">
-            {formatPrice(compareAmount, currencyCode)}
-          </span>
-          <span className="rounded-full bg-green-100 px-2 py-1 font-semibold text-green-700">
-            {discountPercent}% Off
-          </span>
-          <span className="font-medium text-neutral-600">
-            Save {formatPrice(savingsAmount, currencyCode)}
-          </span>
-        </div>
+    <div className="flex items-baseline gap-3">
+      {price ? (
+        <Price amount={price} className="text-2xl font-semibold text-neutral-900 md:text-3xl" currencyCode={product.currencyCode} />
+      ) : null}
+      {compare ? (
+        <Price amount={compare} className="text-sm text-neutral-500 line-through" currencyCode={product.currencyCode} />
       ) : null}
     </div>
   );
 }
+
