@@ -508,20 +508,19 @@ export default function CategoriesPage() {
                       className="text-sm"
                     />
                   </div>
-                </div>
+                  </div>
+          </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="mt-4 flex gap-2">
-          <Button onClick={handleSubmit}>
-            {editingId ? <><Pencil className="mr-1 h-4 w-4" />Update Category</> : <><Plus className="mr-1 h-4 w-4" />Add Category</>}
-          </Button>
-          <Button variant="outline" onClick={resetForm}>
-            Cancel
-          </Button>
-        </div>
-      </Modal>
+            <div className="mt-4 flex gap-2">
+              <Button onClick={handleSubmit}>
+                {editingId ? <><Pencil className="mr-1 h-4 w-4" />Update Category</> : <><Plus className="mr-1 h-4 w-4" />Add Category</>}
+              </Button>
+              <Button variant="outline" onClick={resetForm}>
+                Cancel
+              </Button>
+            </div>
+          </Modal>
       <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

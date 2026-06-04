@@ -2,11 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useOptimistic,
+  createContext,
+  startTransition,
+  useContext,
+  useEffect,
+  useMemo,
+  useOptimistic,
 } from "react";
 
 type ProductState = {
@@ -50,20 +51,20 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
     for (const [key, value] of urlParams.entries()) {
       params[key] = value;
     }
-    if (Object.keys(params).length > 0) {
-      setOptimisticState(params);
+        if (Object.keys(params).length > 0) {
+      startTransition(() => setOptimisticState(params));
     }
   }, []);
 
   const updateOption = (name: string, value: string) => {
     const newState = { [name]: value };
-    setOptimisticState(newState);
+        startTransition(() => setOptimisticState(newState));
     return { ...state, ...newState };
   };
 
   const updateImage = (index: string) => {
     const newState = { image: index };
-    setOptimisticState(newState);
+    startTransition(() => setOptimisticState(newState));
     return { ...state, ...newState };
   };
 

@@ -26,6 +26,7 @@ export function Navbar({
   const iconUrl = settings.faviconUrl && settings.faviconUrl !== "/favicon.ico" ? settings.faviconUrl : undefined;
   const pathname = usePathname();
   const isProductPage = pathname?.startsWith("/product/") ?? false;
+  const isCheckout = pathname?.startsWith("/checkout") ?? false;
   const dark = Boolean(settings?.navbarDark);
 
 
@@ -65,11 +66,13 @@ export function Navbar({
           </div>
 
           {/* Center: Search Bar */}
-          <div className="hidden flex-1 max-w-md md:block">
-            <Suspense fallback={<SearchSkeleton />}>
-              <Search />
-            </Suspense>
-          </div>
+          {!isCheckout && (
+            <div className="hidden flex-1 max-w-md md:block">
+              <Suspense fallback={<SearchSkeleton />}>
+                <Search />
+              </Suspense>
+            </div>
+          )}
 
           {/* Right: Contact Dropdown + Cart */}
           <div className="flex items-center gap-1.5 md:gap-4">
@@ -124,7 +127,7 @@ export function Navbar({
         </div>
 
         {/* Mobile search */}
-        {!isProductPage && (
+        {!isProductPage && !isCheckout && (
           <div className="mt-2 block border-t border-neutral-200 pt-2 md:hidden">
             <Suspense fallback={<SearchSkeleton />}>
               <Search />

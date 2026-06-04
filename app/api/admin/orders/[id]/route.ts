@@ -69,7 +69,47 @@ export async function PATCH(
       { returnDocument: "after" }
     );
     if (!order) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(await populateOrder(db, order));
+    const populatedOrder = await populateOrder(db, order);
+
+        // If the status was changed to "cancelled", send a cancellation email
+    if (body.status === "cancelled" && populatedOrder.customer?.email && !populatedOrder.customer.email.includes("placeholder.local")) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/send-order-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerEmail: populatedOrder.customer.email,
+            customerName: populatedOrder.customer.name,
+            orderId: populatedOrder._id.toString(),
+            total: populatedOrder.total,
+            cancelled: true,
+          }),
+        });
+      } catch (emailError) {
+        console.error("Failed to send cancellation email:", emailError);
+      }
+    }
+
+    // If the status was changed to "shipped", send a shipped notification email
+    if (body.status === "shipped" && populatedOrder.customer?.email && !populatedOrder.customer.email.includes("placeholder.local")) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/send-order-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerEmail: populatedOrder.customer.email,
+            customerName: populatedOrder.customer.name,
+            orderId: populatedOrder._id.toString(),
+            total: populatedOrder.total,
+            shipped: true,
+          }),
+        });
+      } catch (emailError) {
+        console.error("Failed to send shipped notification email:", emailError);
+      }
+    }
+
+    return NextResponse.json(populatedOrder);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

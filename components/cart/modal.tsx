@@ -5,6 +5,7 @@ import Price from "components/price";
 import { DEFAULT_OPTION } from "lib/constants";
 import { trackInitiateCheckout } from "lib/meta-pixel";
 import { createUrl } from "lib/utils";
+import { Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -86,11 +87,16 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 text-neutral-900 md:w-[390px]" style={{ backgroundColor: "#EEF4F8" }}>
-              {/* Header with divider */}
-              <div className={"border-b px-4 py-4 md:px-6" + (navbarDark ? " border-neutral-700 bg-black" : " border-neutral-300")}>
+            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 text-neutral-900 md:w-[420px]" style={{ backgroundColor: "#EEF4F8" }}>
+              {/* Header with bottom border */}
+              <div className={"border-b border-neutral-200/80 px-5 py-4 md:px-7" + (navbarDark ? " border-neutral-700 bg-black" : "")}>
                 <div className="flex items-center justify-between">
-                  <p className={navbarDark ? "text-lg font-semibold text-white" : "text-lg font-semibold"}>My Cart</p>
+                  <p className={navbarDark ? "text-base font-bold text-white" : "text-base font-bold text-neutral-900"}>
+                    My Cart
+                    {cart && cart.lines.length > 0 ? (
+                      <span className="ml-1.5 font-normal text-neutral-500">· {cart.totalQuantity} {cart.totalQuantity === 1 ? "item" : "items"}</span>
+                    ) : null}
+                  </p>
                   <button aria-label="Close cart" onClick={closeCart}>
                     <CloseCart navbarDark={navbarDark} />
                   </button>
@@ -98,7 +104,7 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
               </div>
 
               {!cart || cart.lines.length === 0 ? (
-                <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
+                <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden px-5">
                   <svg className="h-16 w-16 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
@@ -115,9 +121,9 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
                 </div>
               ) : (
                 <div className="flex h-full flex-col justify-between overflow-hidden">
-                  {/* Product list - full width, no side padding */}
-                  <div className="grow overflow-auto">
-                    <ul className="divide-y divide-neutral-200/70">
+                  {/* Product list */}
+                  <div className="grow overflow-auto px-5 pt-4 md:px-7 md:pt-5">
+                    <ul className="flex flex-col gap-3">
                     {cart.lines
                       .sort((a, b) =>
                         a.merchandise.product.title.localeCompare(
@@ -142,24 +148,52 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
                           new URLSearchParams(merchandiseSearchParams),
                         );
 
+                        // Determine the color value for a swatch — look for a "Color" option
+                        const colorOption = item.merchandise.selectedOptions.find(
+                          (o) => o.name.toLowerCase() === "color" || o.name.toLowerCase() === "colour",
+                        );
+                        const colorValue = colorOption?.value;
+                        // Map common color names to hex for swatch display
+                        const colorMap: Record<string, string> = {
+                          black: "#000000",
+                          white: "#ffffff",
+                          silver: "#c0c0c0",
+                          gold: "#ffd700",
+                          "rose gold": "#e0bfb8",
+                          blue: "#0000ff",
+                          red: "#ff0000",
+                          green: "#008000",
+                          brown: "#8b4513",
+                          gray: "#808080",
+                          grey: "#808080",
+                          navy: "#000080",
+                          beige: "#f5f5dc",
+                          cream: "#fffdd0",
+                          tan: "#d2b48c",
+                          bronze: "#cd7f32",
+                          titanium: "#878681",
+                          cognac: "#9a4a3a",
+                        };
+                        const swatchColor = colorValue ? colorMap[colorValue.toLowerCase()] || colorValue : undefined;
+
                         return (
                           <li
                             key={i}
-                            className="flex w-full flex-col"
+                            className="flex w-full flex-col rounded-xl bg-white p-3 shadow-sm ring-1 ring-neutral-100 md:p-4"
                           >
-                            <div className="relative flex w-full flex-row justify-between px-3 py-4 md:px-6">
-                              <div className="absolute z-40 -ml-1 -mt-2">
+                            <div className="relative flex w-full flex-row justify-between">
+                              <div className="absolute z-40 -left-1.5 -top-1.5">
                                 <DeleteItemButton
                                   item={item}
                                   optimisticUpdate={updateCartItem}
                                 />
                               </div>
-                              <div className="flex min-w-0 flex-1 flex-row">
-                                <div className="relative h-16 w-16 flex-none overflow-hidden rounded-md border border-neutral-300 bg-neutral-100">
+                              <div className="flex min-w-0 flex-1 flex-row gap-3">
+                                <div className="relative h-20 w-20 flex-none overflow-hidden rounded-lg border border-neutral-200 bg-white md:h-24 md:w-24">
                                   <Image
-                                    className="h-full w-full object-cover"
-                                    width={64}
-                                    height={64}
+                                    className="h-full w-full object-contain p-1"
+                                    width={96}
+                                    height={96}
                                     alt={
                                       item.merchandise.product.image?.altText ||
                                       item.merchandise.product.featuredImage
@@ -177,37 +211,44 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
                                 <Link
                                   href={merchandiseUrl}
                                   onClick={closeCart}
-                                  className="z-30 ml-2 flex min-w-0 flex-1 flex-row space-x-4"
+                                  className="z-30 flex min-w-0 flex-1 flex-col"
                                 >
-                                  <div className="flex min-w-0 flex-1 flex-col text-base">
-                                    <span className="line-clamp-2 leading-tight text-neutral-900">
-                                      {item.merchandise.product.title}
-                                    </span>
-                                    {item.merchandise.title !==
-                                    DEFAULT_OPTION ? (
-                                      <p className="text-sm text-neutral-600 mt-1">
-                                        {item.merchandise.title}
-                                      </p>
-                                    ) : null}
-                                  </div>
+                                  <span className="line-clamp-2 text-sm font-semibold leading-tight text-neutral-900">
+                                    {item.merchandise.product.title}
+                                  </span>
+                                  {/* Color swatch pill */}
+                                  {swatchColor && (
+                                    <div className="mt-1.5 flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 self-start">
+                                      <span
+                                        className="inline-block h-3 w-3 rounded-full ring-1 ring-inset ring-neutral-300"
+                                        style={{ backgroundColor: swatchColor }}
+                                      />
+                                      <span className="text-[11px] font-medium text-neutral-600">{colorValue}</span>
+                                    </div>
+                                  )}
+                                  {item.merchandise.title !== DEFAULT_OPTION && !swatchColor ? (
+                                    <p className="mt-1 text-xs text-neutral-500">
+                                      {item.merchandise.title}
+                                    </p>
+                                  ) : null}
                                 </Link>
                               </div>
-                              <div className="flex h-16 flex-col justify-between">
+                              <div className="flex h-20 flex-col justify-between md:h-24">
                                 <Price
-                                  className="flex justify-end space-y-2 text-right text-sm text-neutral-900"
+                                  className="flex justify-end text-right text-sm font-semibold text-neutral-900"
                                   amount={item.cost.totalAmount.amount}
                                   currencyCode={
                                     item.cost.totalAmount.currencyCode
                                   }
                                 />
-                                <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-300 bg-white">
+                                <div className="ml-auto flex h-8 flex-row items-center rounded-full border border-neutral-200 bg-white">
                                   <EditItemQuantityButton
                                     item={item}
                                     type="minus"
                                     optimisticUpdate={updateCartItem}
                                   />
-                                  <p className="w-6 text-center">
-                                    <span className="w-full text-sm text-neutral-900">
+                                  <p className="min-w-[24px] text-center">
+                                    <span className="text-sm font-semibold text-neutral-900">
                                       {item.quantity}
                                     </span>
                                   </p>
@@ -224,22 +265,24 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
                       })}
                     </ul>
                   </div>
-                  {/* Checkout footer - full width */}
-                  <div className="bg-white px-4 py-4 md:px-6">
+                  {/* Checkout footer */}
+                  <div className="border-t border-neutral-200/80 bg-white px-5 pb-5 pt-4 md:px-7 md:pb-6 md:pt-5">
                     <div className="flex items-center justify-between">
-                      <p className="text-base font-medium text-neutral-900">Total</p>
+                      <p className="text-sm font-semibold text-neutral-700">Total</p>
                       <Price
-                        className="text-right text-base font-semibold text-neutral-900"
+                        className="text-right text-lg font-bold text-neutral-900"
                         amount={cart.cost.totalAmount.amount}
                         currencyCode={cart.cost.totalAmount.currencyCode}
                       />
                     </div>
-                    <div className="my-4 border-t border-neutral-300" />
+                    <p className="mt-0.5 text-[11px] text-neutral-400">VAT included</p>
+                    <div className="my-4 border-t border-neutral-200" />
                     <Link
                       href="/checkout"
                       onClick={handleCheckout}
-                      className="block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+                      className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-700"
                     >
+                      <Lock className="h-4 w-4" />
                       Proceed to Checkout
                     </Link>
                   </div>

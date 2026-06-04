@@ -62,7 +62,8 @@ export default async function BrandPage(props: {
   return (
     <div className="mx-auto max-w-(--breakpoint-2xl) px-4 pb-4 text-black dark:text-white">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: brand.name }]} />
-      <div className="mb-6 flex items-end gap-2 border-b border-neutral-200 pb-3 dark:border-neutral-700 sm:gap-3">
+
+      <div className="mb-6 flex items-end gap-2 border-b border-neutral-100 pb-4 sm:gap-3">
         <BrandCollections collections={collections} />
         <div className="min-w-0 flex-1 sm:ml-auto sm:flex-none">
           <FilterList list={sorting} title="Sort by" horizontal />

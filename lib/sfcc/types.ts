@@ -1,6 +1,6 @@
 import {
-    ShopperBasketsTypes,
-    ShopperProductsTypes,
+  ShopperBasketsTypes,
+  ShopperProductsTypes,
 } from "commerce-sdk-isomorphic";
 
 export type Connection<T> = {
@@ -20,6 +20,7 @@ export type Collection = {
   path: string;
   emoji?: string;
   image?: string;
+  children?: { handle: string; title: string; path: string }[];
 };
 
 export type SalesforceProduct = {

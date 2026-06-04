@@ -84,12 +84,12 @@ export function VariantSelector({
 
   return options.map((option) => (
     <form key={option.id}>
-      <dl className="mb-4 overflow-visible border-b border-neutral-200 pb-3 md:mb-6 md:pb-4">
-        <dt className="mb-3 text-xs font-semibold uppercase leading-none tracking-[0.18em] text-neutral-500 md:mb-4 md:text-sm md:leading-normal">
+      <dl className="mb-2 overflow-visible border-b border-neutral-200 pb-1 md:mb-3 md:pb-2">
+        <dt className="mb-1 text-xs font-semibold uppercase leading-none tracking-[0.18em] text-neutral-500 md:mb-2 md:text-sm md:leading-normal">
           {option.name}
         </dt>
         <dd className={clsx(
-          "scrollbar-hide -mx-3 flex gap-2 px-3 pb-2 pt-px md:mx-0 md:flex-wrap md:gap-3 md:overflow-visible md:px-0 md:pb-0 md:pt-0",
+          "scrollbar-hide -mx-3 flex gap-1.5 px-3 pb-1 pt-px md:mx-0 md:flex-wrap md:gap-2 md:overflow-visible md:px-0 md:pb-0 md:pt-0",
           option.values.length <= 4 ? "flex-nowrap" : "snap-x snap-mandatory overflow-x-auto",
         )}>
           {option.values.map((value) => {
@@ -147,7 +147,7 @@ export function VariantSelector({
                 disabled={!isAvailableForSale}
                 title={`${option.name} ${value.name}${!isAvailableForSale ? " (Out of Stock)" : ""}`}
                 className={clsx(
-                  "flex items-center justify-center rounded-full border bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-900 md:min-w-[48px] md:px-4",
+                  "flex items-center justify-center rounded-full border bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-900 md:min-w-[40px] md:px-2.5 md:py-1.5 md:text-sm",
                   option.values.length <= 4 ? "flex-1" : "min-w-max shrink-0 snap-start",
                   {
                     "border-blue-600 ring-2 ring-blue-600 bg-white": isActive,

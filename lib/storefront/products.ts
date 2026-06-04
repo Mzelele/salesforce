@@ -149,9 +149,11 @@ export function mapProduct(doc: any): SFCCProduct {
     categoryId:
       doc.category?._id?.toString?.() ||
       doc.category?.toString?.() ||
+      (Array.isArray(doc.categories) && doc.categories[0]?._id?.toString?.()) ||
+      (Array.isArray(doc.categories) && doc.categories[0]?.toString?.()) ||
       undefined,
-    categoryName: doc.category?.name || undefined,
-    categorySlug: doc.category?.slug || undefined,
+    categoryName: doc.category?.name || (Array.isArray(doc.categories) ? doc.categories[0]?.name : undefined) || undefined,
+    categorySlug: doc.category?.slug || (Array.isArray(doc.categories) ? doc.categories[0]?.slug : undefined) || undefined,
     brandSlug: doc.brand?.toString?.() || doc.brand || undefined,
     defaultVariant: doc.defaultVariant || undefined,
     sku: doc.sku || undefined,
@@ -197,10 +199,15 @@ export async function getProducts(params: {
   const andConditions: any[] = [];
 
   if (searchTerm) {
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    
     andConditions.push({
       $or: [
-        { name: { $regex: searchTerm, $options: "i" } },
-        { description: { $regex: searchTerm, $options: "i" } },
+        { name: { $regex: `^${escapedTerm}$`, $options: "i" } },
+        { name: { $regex: `^${escapedTerm}`, $options: "i" } },
+        { name: { $regex: `\\b${escapedTerm}`, $options: "i" } },
+        { name: { $regex: escapedTerm, $options: "i" } },
+        { description: { $regex: escapedTerm, $options: "i" } },
       ],
     });
   }
@@ -212,7 +219,12 @@ export async function getProducts(params: {
     if (categoryDoc) {
       const catId = categoryDoc._id;
       andConditions.push({
-        $or: [{ category: catId }, { category: catId.toString() }],
+        $or: [
+          { categories: catId },
+          { categories: catId.toString() },
+          { category: catId },
+          { category: catId.toString() },
+        ],
       });
     }
   }
@@ -235,41 +247,86 @@ export async function getProducts(params: {
     query.price = { ...query.price, $lte: params.maxPrice };
 
   const sort: any = {};
-  switch (sortKey) {
-    case "price_asc":
-    case "price-low-to-high":
-      sort.price = 1;
-      break;
-    case "price_desc":
-    case "price-high-to-low":
-      sort.price = -1;
-      break;
-    case "newest":
-      sort.createdAt = -1;
-      break;
-    case "oldest":
-      sort.createdAt = 1;
-      break;
-    case "product-name-ascending":
-      sort.name = 1;
-      break;
-    case "product-name-descending":
-      sort.name = -1;
-      break;
-    default:
-      sort.createdAt = -1;
+  
+  // When searching, prioritize relevance scoring
+  if (searchTerm) {
+    // Sort by name ascending so exact/starts-with matches come first alphabetically
+    sort.name = 1;
+  } else {
+    switch (sortKey) {
+      case "price_asc":
+      case "price-low-to-high":
+        sort.price = 1;
+        break;
+      case "price_desc":
+      case "price-high-to-low":
+        sort.price = -1;
+        break;
+      case "newest":
+        sort.createdAt = -1;
+        break;
+      case "oldest":
+        sort.createdAt = 1;
+        break;
+      case "product-name-ascending":
+        sort.name = 1;
+        break;
+      case "product-name-descending":
+        sort.name = -1;
+        break;
+      default:
+        sort.createdAt = -1;
+    }
   }
 
-  const [docs, total] = await Promise.all([
-    db
-      .collection("products")
-      .find(query)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .toArray(),
-    db.collection("products").countDocuments(query),
-  ]);
+  let docs;
+  let total;
+
+  if (searchTerm) {
+    // Use aggregation pipeline to compute relevance scores for better search results
+    // Exact matches and prefix matches are scored higher
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    
+    const pipeline: any[] = [
+      { $match: query },
+      {
+        $addFields: {
+          relevanceScore: {
+            $add: [
+              { $cond: [{ $regexMatch: { input: "$name", regex: new RegExp(`^${escapedTerm}$`, "i") } }, 100, 0] },
+              { $cond: [{ $regexMatch: { input: "$name", regex: new RegExp(`^${escapedTerm}`, "i") } }, 50, 0] },
+              { $cond: [{ $regexMatch: { input: "$name", regex: new RegExp(`\\b${escapedTerm}`, "i") } }, 20, 0] },
+              { $cond: [{ $regexMatch: { input: "$name", regex: new RegExp(escapedTerm, "i") } }, 10, 0] },
+              { $cond: [{ $regexMatch: { input: "$description", regex: new RegExp(escapedTerm, "i") } }, 5, 0] },
+            ],
+          },
+        },
+      },
+      { $sort: { relevanceScore: -1, name: 1 } },
+      { $skip: skip },
+      { $limit: limit },
+    ];
+
+    const countPipeline: any[] = [
+      { $match: query },
+      { $count: "total" },
+    ];
+
+    const [aggregated, countResult] = await Promise.all([
+      db.collection("products").aggregate(pipeline).toArray(),
+      db.collection("products").aggregate(countPipeline).toArray(),
+    ]);
+    
+    docs = aggregated;
+    total = countResult[0]?.total || 0;
+  } else {
+    const [found, count] = await Promise.all([
+      db.collection("products").find(query).sort(sort).skip(skip).limit(limit).toArray(),
+      db.collection("products").countDocuments(query),
+    ]);
+    docs = found;
+    total = count;
+  }
 
   return {
     products: docs.map(mapProduct),
@@ -298,7 +355,19 @@ export async function getProductBySlug(slug: string) {
     .collection("products")
     .findOne({ $or: lookupConditions });
   if (!doc) return null;
-  if (doc.category) {
+  
+  // Populate categories - support both new array and old single field
+  if (Array.isArray(doc.categories) && doc.categories.length > 0) {
+    const ids = doc.categories.map((c: any) => {
+      const str = c?.toString?.() || c;
+      try { return new ObjectId(str); } catch { return str; }
+    });
+    const cats = await db.collection("categories").find({ _id: { $in: ids } }).toArray();
+    // Store the first category for backward compatibility
+    if (cats.length > 0) {
+      doc.category = cats[0];
+    }
+  } else if (doc.category) {
     const cat = await db
       .collection("categories")
       .findOne({ _id: doc.category });
@@ -317,7 +386,12 @@ export async function getRelatedProducts(
     .collection("products")
     .find({
       status: "active",
-      category: new ObjectId(categoryId),
+      $or: [
+        { categories: new ObjectId(categoryId) },
+        { categories: categoryId },
+        { category: new ObjectId(categoryId) },
+        { category: categoryId },
+      ],
       _id: { $ne: new ObjectId(excludeId) },
     })
     .sort({ _id: -1 })

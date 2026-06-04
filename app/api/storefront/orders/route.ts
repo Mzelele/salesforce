@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
     const customerEmail = email || (phone ? `${phone}@placeholder.local` : `guest-${Date.now()}@placeholder.local`);
 
     let customer = await db.collection("customers").findOne({ $or: [{ email: customerEmail }, { phone }] });
+    if (customer && email && customer.email !== email) {
+      await db.collection("customers").updateOne({ _id: customer._id }, { $set: { email: email } });
+      customer.email = email;
+    }
     if (!customer) {
       const now = new Date();
       const result = await db.collection("customers").insertOne({
@@ -73,6 +77,25 @@ export async function POST(req: NextRequest) {
     };
 
     const result = await db.collection("orders").insertOne(orderData);
+
+    try {
+      await fetch(new URL("/api/send-order-email", req.url), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail,
+          customerName: fullName,
+          orderId: orderNumber,
+          items: orderData.items,
+          total: orderData.total,
+          phone: phone || "",
+          address: `${address}, ${city}, ${country}`,
+          productUrl: body.items?.[0]?.productId ? `https://watchesinkenya.co.ke/product/${body.items[0].handle || ""}` : "",
+        }),
+      });
+    } catch (emailError) {
+      console.error("Order email error:", emailError);
+    }
 
     return NextResponse.json({ orderId: result.insertedId.toString(), orderNumber });
   } catch (error) {

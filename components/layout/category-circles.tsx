@@ -22,7 +22,40 @@ const circleThemes = [
   "bg-[#FF4A2F]",
 ];
 
-function CategoryArtwork({ category }: { category: Category }) {
+function CategoryArtwork({ category, preferImage = true }: { category: Category; preferImage?: boolean }) {
+  // preferImage: when true (carousel), use image if available; when false (header), prefer emoji and fallback to favicon if only image exists
+  if (preferImage) {
+    if (category.image) {
+      return (
+        <Image
+          src={category.image}
+          alt={category.title}
+          width={220}
+          height={220}
+          className="h-full w-full object-cover"
+        />
+      );
+    }
+
+    return (
+      <span
+        className="text-4xl leading-none sm:text-5xl md:text-7xl"
+        style={{ filter: "drop-shadow(0 6px 8px rgba(0,0,0,0.18))" }}
+      >
+        {category.emoji || "\u{1F4E6}"}
+      </span>
+    );
+  }
+
+  // prefer emoji; if not available and image exists, show the image; otherwise fallback to box emoji
+  if (category.emoji) {
+    return (
+      <span className="text-4xl leading-none sm:text-5xl md:text-7xl" style={{ filter: "drop-shadow(0 6px 8px rgba(0,0,0,0.18))" }}>
+        {category.emoji}
+      </span>
+    );
+  }
+
   if (category.image) {
     return (
       <Image
@@ -36,12 +69,7 @@ function CategoryArtwork({ category }: { category: Category }) {
   }
 
   return (
-    <span
-      className="text-4xl leading-none sm:text-5xl md:text-7xl"
-      style={{ filter: "drop-shadow(0 6px 8px rgba(0,0,0,0.18))" }}
-    >
-      {category.emoji || "\u{1F4E6}"}
-    </span>
+    <span className="text-4xl leading-none sm:text-5xl md:text-7xl">{"\u{1F4E6}"}</span>
   );
 }
 
@@ -53,10 +81,10 @@ function CategoryTile({ category, index }: { category: Category; index: number }
     >
       <div
         className={clsx(
-          "flex h-[76px] w-[76px] items-center justify-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] md:h-[158px] md:w-[158px] lg:h-[164px] lg:w-[164px] overflow-hidden bg-white ring-1 ring-neutral-300 md:ring-2 md:ring-neutral-300"
+          "flex h-[76px] w-[76px] items-center justify-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] md:h-[158px] md:w-[158px] lg:h-[164px] lg:w-[164px] overflow-hidden bg-[#FAFAFA] ring-1 ring-neutral-300 md:ring-2 md:ring-neutral-300"
         )}
       >
-        <CategoryArtwork category={category} />
+        <CategoryArtwork category={category} preferImage={true} />
       </div>
       <span className="mt-2 line-clamp-2 min-h-[1.9rem] px-1 text-center text-[11px] font-semibold leading-tight text-neutral-950 sm:text-xs md:mt-3 md:min-h-[2.4rem] md:px-2 md:text-[15px] md:font-bold">
         {category.title}
@@ -101,7 +129,7 @@ export function CategoryCircles({ categories }: { categories: Category[] }) {
   if (!visibleCategories.length) return null;
 
   return (
-    <section className="w-full bg-white pb-1 pt-3 md:pb-2 md:pt-5 lg:pb-2 lg:pt-5">
+    <section className="w-full bg-[#FAFAFA] pb-1 pt-3 md:pb-2 md:pt-5 lg:pb-2 lg:pt-5">
       <div className="mx-auto max-w-7xl px-1.5 md:px-3 lg:px-4">
         <div className="relative flex items-center">
           <button

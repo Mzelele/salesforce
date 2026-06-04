@@ -17,8 +17,19 @@ export async function PUT(
   try {
     const db = await connectDB();
     const { id } = await params;
-    const body = await req.json();
+        const body = await req.json();
+    // normalize parent and slug
     if (body.slug || body.name) body.slug = slugify(body.slug || body.name);
+    if (body.parent === "none" || body.parent === null || body.parent === undefined || body.parent === "") {
+      body.parent = null;
+    } else {
+      try {
+        body.parent = new ObjectId(body.parent);
+      } catch (e) {
+        body.parent = null;
+      }
+    }
+
     const category = await db.collection("categories").findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: { ...body, updatedAt: new Date() } },

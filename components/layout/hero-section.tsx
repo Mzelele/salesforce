@@ -5,7 +5,13 @@ import { StoreFeatures } from "./store-features";
 export function HeroSection({
   categories,
 }: {
-  categories: { slug: string; title: string; emoji?: string }[];
+  categories: {
+    slug: string;
+    title: string;
+    emoji?: string;
+    image?: string;
+    children?: { slug: string; title: string; path: string }[];
+  }[];
 }) {
   return (
     <section className="w-full" style={{ backgroundColor: "#E1F3FF" }}>

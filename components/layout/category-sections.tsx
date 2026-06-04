@@ -5,10 +5,15 @@ import { GridTileImage } from "components/grid/tile";
 import { Product } from "lib/sfcc/types";
 import Link from "next/link";
 
+import Image from "next/image";
+
 interface CategoryData {
   slug: string;
   name: string;
   description?: string;
+  image?: string;
+  emoji?: string;
+  children?: { slug: string; title: string; path: string }[];
 }
 
 interface CategorySectionsProps {
@@ -36,10 +41,41 @@ export default function CategorySections({ categories, initialData }: CategorySe
           if (!catData || catData.products.length === 0) return null;
 
           return (
-            <section key={cat.slug} className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-neutral-200">
+            <section key={cat.slug} className="overflow-hidden rounded-xl bg-[#FAFAFA] shadow-sm ring-1 ring-neutral-200">
               <div className={`flex items-center justify-between gap-3 px-3 py-2 text-white md:gap-4 md:px-5 md:py-2.5 ${headerThemes[sectionIndex % headerThemes.length]}`}>
                 <div className="flex min-w-0 items-center gap-1.5 md:gap-3">
-                  <h2 className="truncate text-base font-bold md:text-2xl">{cat.name}</h2>
+                  {cat.emoji ? (
+                    <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-white text-lg">
+                      <span className="text-lg leading-none">{cat.emoji}</span>
+                    </div>
+                  ) : cat.image ? (
+                    // Only image is available: show a small favicon fallback in the header (first column)
+                    <div className="flex-shrink-0">
+                      <Image src="/favicon.ico" alt={cat.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
+                    </div>
+                  ) : null}
+                  <div className="relative group">
+                    <h2 className="truncate text-base font-bold md:text-2xl flex items-center gap-2">
+                      {cat.name}
+                      {cat.children && cat.children.length > 0 && (
+                        <span className="hidden md:inline-flex items-center justify-center rounded-sm bg-white/20 px-1 py-0.5 text-xs font-medium">{cat.children.length} ▸</span>
+                      )}
+                    </h2>
+
+                    {/* Popover showing children on hover (desktop) */}
+                    {cat.children && cat.children.length > 0 && (
+                      <div className="hidden md:block absolute left-0 top-full z-40 mt-2 min-w-[200px] rounded-md bg-white text-neutral-900 shadow-lg group-hover:block">
+                        <div className="flex flex-col">
+                          {cat.children.map((child) => (
+                            <Link key={child.slug} href={child.path} className="px-3 py-2 text-sm hover:bg-neutral-100">
+                              {child.title}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
                   {cat.description ? (
                     <p className="hidden truncate text-xs font-medium text-white/85 sm:block md:text-sm">
                       {cat.description}
@@ -55,7 +91,7 @@ export default function CategorySections({ categories, initialData }: CategorySe
               </div>
 
               <div className="p-3 md:p-5">
-                <Grid className="grid-cols-2 gap-3 lg:grid-cols-6 lg:gap-4">
+                <Grid className="grid-cols-2 gap-2 lg:grid-cols-6 lg:gap-3">
                   {catData.products.map((product, index) => (
                     <Grid.Item
                       key={product.handle}

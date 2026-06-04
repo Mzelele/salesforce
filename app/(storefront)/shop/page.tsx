@@ -1,3 +1,23 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { Breadcrumbs } from "components/breadcrumbs";
 import Grid from "components/grid";
 import ProductGridItems from "components/layout/product-grid-items";
@@ -60,17 +80,52 @@ export default async function ShopPage(props: {
   ]);
   const resultsText = products.length > 1 ? "results" : "result";
 
-  return (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return (
     <>
-      <div className="mb-6 flex items-center gap-1 border-b border-neutral-200 py-3 sm:gap-3">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop" }]} />
-        <Collections horizontal defaultPath="/product-category/mens-watch" />
-        <div className="ml-auto">
-          <FilterList list={sorting} title="Sort by" horizontal />
+      {/* Header toolbar row with top spacing */}
+      <div className="pt-4 md:pt-6">
+        <div className="flex items-center gap-2 border-b border-neutral-100 pb-4 sm:gap-3">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop" }]} />
+          <Collections horizontal defaultPath="/product-category/mens-watch" />
+          <div className="ml-auto">
+            <FilterList list={sorting} title="Sort by" horizontal />
+          </div>
         </div>
       </div>
       {searchValue ? (
-        <p className="mb-4 text-sm text-neutral-900">
+        <p className="mb-4 text-sm text-neutral-700">
           {products.length === 0
             ? "There are no products that match "
             : `Showing ${products.length} ${resultsText} for `}
@@ -79,12 +134,28 @@ export default async function ShopPage(props: {
       ) : null}
       {products.length > 0 ? (
         <>
-          <Grid className="grid-cols-2 lg:grid-cols-6">
+          <Grid className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
             <ProductGridItems products={products} />
           </Grid>
           <Pagination page={page} totalPages={totalPages} />
         </>
       ) : null}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <StickyWhatsAppButton
         phone={settings.whatsappPhone || settings.storePhone}
         message="Hi, I'm browsing your shop and have a question."

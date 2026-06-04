@@ -89,6 +89,11 @@ export default async function HomePage() {
     title: c.title,
     emoji: c.emoji,
     image: c.image,
+    children: (c.children || []).map((ch) => ({
+      slug: ch.handle,
+      title: ch.title,
+      path: ch.path,
+    })),
   }));
 
   return (

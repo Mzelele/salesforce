@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const newName = `${rest.name} (Copy)`;
     const newSlug = `${slugify(rest.slug || rest.name)}-${Date.now()}`;
 
-    const toInsert: any = {
+        const toInsert: any = {
       ...rest,
       name: newName,
       slug: newSlug,
@@ -35,8 +35,13 @@ export async function POST(req: NextRequest) {
       createdAt: now,
       updatedAt: now,
     };
-    if (toInsert.category && typeof toInsert.category === "string") {
-      try { toInsert.category = new ObjectId(toInsert.category); } catch {}
+    // Preserve categories array, remove old single field
+    if (toInsert.category) delete toInsert.category;
+    if (Array.isArray(toInsert.categories)) {
+      toInsert.categories = toInsert.categories.map((c: any) => {
+        const idStr = c?.toString?.() || c;
+        try { return new ObjectId(idStr); } catch { return idStr; }
+      });
     }
 
     const result = await db.collection("products").insertOne(toInsert);

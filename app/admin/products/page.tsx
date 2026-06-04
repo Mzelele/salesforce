@@ -2,21 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import clsx from "clsx";
@@ -36,6 +36,8 @@ interface Product {
   stock: number;
   status: string;
   images: string[];
+  featuredImage?: string;
+  categories?: any[];
   category?: { name: string };
 }
 
@@ -366,7 +368,12 @@ function ProductsContent() {
                     <td className="px-4 py-3 font-medium dark:text-white">{product.name}</td>
                     <td className="px-4 py-3 text-neutral-500 dark:text-neutral-300">{product.sku || "—"}</td>
                     <td className="px-4 py-3 capitalize dark:text-white">{product.type}</td>
-                    <td className="px-4 py-3 dark:text-white">{product.category?.name || "—"}</td>
+                    <td className="px-4 py-3 dark:text-white">
+                      {Array.isArray(product.categories) && product.categories.length > 0
+                        ? product.categories.map((c: any) => (typeof c === 'object' ? c.name : c)).filter(Boolean).join(", ")
+                        : product.category?.name || "—"
+                      }
+                    </td>
                     <td className="px-4 py-3 dark:text-white">KES {product.price}</td>
                     <td className="px-4 py-3 dark:text-white">{product.stock}</td>
                     <td className="px-4 py-3">

@@ -27,8 +27,11 @@ export async function PUT(req: NextRequest) {
     if (updates.price !== undefined && updates.price !== "") {
       updateDoc.$set.price = Number(updates.price);
     }
-    if (updates.category !== undefined && updates.category !== "") {
-      updateDoc.$set.category = new ObjectId(updates.category);
+        if (updates.category !== undefined && updates.category !== "") {
+      const catId = new ObjectId(updates.category);
+      // Replace categories with the assigned one (bulk assign replaces all)
+      updateDoc.$set.categories = [catId];
+      updateDoc.$unset = { category: "" };
     }
     if (updates.comparePrice !== undefined && updates.comparePrice !== "") {
       updateDoc.$set.comparePrice = Number(updates.comparePrice);

@@ -18,23 +18,20 @@ const Label = ({
   return (
     <div
       className={clsx(
-        "absolute bottom-0 left-0 flex w-full min-w-0 px-2 pb-1.5 @container/label sm:px-3 sm:pb-2",
-        {
-          "lg:px-20 lg:pb-[35%]": position === "center",
-        },
+        "w-full bg-[#f7f7f7] px-3 pb-3 pt-2 sm:px-4 sm:pb-4 sm:pt-3",
       )}
     >
-      <div className="flex min-w-0 items-center rounded-full border bg-white/70 px-1 py-[1px] text-[10px] font-semibold text-black backdrop-blur-md dark:border-neutral-800 dark:bg-black/70 dark:text-white sm:px-1.5 sm:py-[3px] sm:text-xs">
-        <h3 className="mr-1 line-clamp-1 min-w-0 grow pl-1.5 leading-none tracking-tight sm:mr-2 sm:pl-2">
-          {title}
-        </h3>
-        <Price
-          className="flex-none rounded-full bg-blue-600 px-1.5 py-[2px] text-white sm:px-2 sm:py-1"
-          amount={amountMin}
-          prefix={isRangePrice ? "From " : ""}
-          currencyCode={currencyCode}
-        />
-      </div>
+      {/* Product name - clearly visible */}
+      <h3 className="line-clamp-2 text-sm font-semibold leading-tight text-neutral-800 sm:text-base">
+        {title}
+      </h3>
+      {/* Price - prominent and easy to scan */}
+      <Price
+        className="mt-1 text-base font-bold text-blue-600 sm:text-lg"
+        amount={amountMin}
+        prefix={isRangePrice ? "From " : ""}
+        currencyCode={currencyCode}
+      />
     </div>
   );
 };

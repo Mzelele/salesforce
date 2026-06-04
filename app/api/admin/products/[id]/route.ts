@@ -25,30 +25,39 @@ async function detectCategory(text: string) {
   try {
     const db = await connectDB();
     const categories = await db.collection("categories").find().toArray();
-    if (!categories.length) return null;
+    if (!categories.length) return [];
     const normalized = (text || "").toLowerCase();
+    const matched: string[] = [];
 
     for (const cat of categories) {
       const name = (cat.name || "").toLowerCase();
       const slug = (cat.slug || "").toLowerCase();
 
       const nameRegex = new RegExp("\\b" + name.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&") + "\\b", "i");
-      if (name && nameRegex.test(normalized)) return cat._id.toString();
+      if (name && nameRegex.test(normalized)) {
+        matched.push(cat._id.toString());
+        continue;
+      }
 
-      if (slug && normalized.includes(slug)) return cat._id.toString();
+      if (slug && normalized.includes(slug)) {
+        if (!matched.includes(cat._id.toString())) matched.push(cat._id.toString());
+        continue;
+      }
 
       const keywords = Array.isArray(cat.keywords) ? cat.keywords : (cat.keywords ? String(cat.keywords).split(",") : []);
       for (const kw of keywords) {
         const k = (kw || "").toLowerCase().trim();
         if (!k) continue;
         const kwRegex = new RegExp("\\b" + k.replace(/[.*+?^${}()|[\\]\\]\\\\]/g, "\\$&") + "\\b", "i");
-        if (kwRegex.test(normalized) || normalized.includes(k)) return cat._id.toString();
+        if (kwRegex.test(normalized) || normalized.includes(k)) {
+          if (!matched.includes(cat._id.toString())) matched.push(cat._id.toString());
+        }
       }
     }
 
-    return null;
+    return matched;
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -67,13 +76,27 @@ export async function GET(
   try {
     const db = await connectDB();
     const { id } = await params;
-    const product = await db.collection("products").findOne({ _id: new ObjectId(id) });
+        const product = await db.collection("products").findOne({ _id: new ObjectId(id) });
     if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    if (product.category) {
-      const cat = await db.collection("categories").findOne({ _id: new ObjectId(product.category.toString()) });
-      if (cat) product.category = cat;
+    
+    // Populate categories - support both new array and old single field
+    const p2 = { ...product };
+    if (Array.isArray(p2.categories) && p2.categories.length > 0) {
+      const ids = p2.categories.map((c: any) => {
+        const str = c?.toString?.() || c;
+        try { return new ObjectId(str); } catch { return str; }
+      });
+      const cats = await db.collection("categories").find({ _id: { $in: ids } }).toArray();
+      const catMap = Object.fromEntries(cats.map((c) => [c._id.toString(), c]));
+      p2.categories = p2.categories.map((c: any) => {
+        const id = c?.toString?.() || c;
+        return catMap[id] || c;
+      });
+    } else if (p2.category) {
+      const cat = await db.collection("categories").findOne({ _id: new ObjectId(p2.category.toString()) });
+      if (cat) p2.category = cat;
     }
-    return NextResponse.json(product);
+    return NextResponse.json(p2);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -87,22 +110,42 @@ export async function PUT(
     const db = await connectDB();
     const { id } = await params;
     const body = await req.json();
-    if (body.slug || body.name) body.slug = slugify(body.slug || body.name);
+        if (body.slug || body.name) body.slug = slugify(body.slug || body.name);
     if (body.name) {
       const detectedBrand = await detectBrand(body.name);
       if (detectedBrand) body.brand = detectedBrand;
 
-      // Attempt to detect category from the name/description when category isn't provided
-      if (!body.category) {
-        const text = `${body.name || ""} ${body.description || ""}`.trim();
-        const detectedCategory = await detectCategory(text);
-        if (detectedCategory) body.category = detectedCategory; // keep as string id; will be converted below
+      // Auto-detect categories from the product title/description
+      const text = `${body.name || ""} ${body.description || ""}`.trim();
+      const detectedCategories = await detectCategory(text);
+      
+      // Merge: user manually selected categories + detected
+      const manualCategories = Array.isArray(body.categories) ? body.categories : [];
+      if (body.category && !manualCategories.includes(body.category)) {
+        manualCategories.push(body.category);
+      }
+      delete body.category;
+      
+      const allCategoryIds = [...new Set([...manualCategories, ...detectedCategories])];
+      body.categories = allCategoryIds.map((id: string) => {
+        try { return new ObjectId(id); } catch { return id; }
+      });
+    } else {
+      // Handle single category field
+      if (body.category) {
+        body.categories = [new ObjectId(body.category)];
+        delete body.category;
+      } else if (Array.isArray(body.categories)) {
+        body.categories = body.categories.map((id: string) => {
+          try { return new ObjectId(id); } catch { return id; }
+        });
+      } else {
+        body.categories = [];
       }
     }
-    if (body.category) {
-      body.category = new ObjectId(body.category);
-    }
     body.updatedAt = new Date();
+    // Remove old category field if present
+    delete body.category;
     const product = await db.collection("products").findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: body },

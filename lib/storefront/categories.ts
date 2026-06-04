@@ -12,12 +12,27 @@ function mapCategory(doc: any): Collection {
     path: `/product-category/${doc.slug}`,
     emoji: doc.emoji,
     image: doc.image,
+    // include children if provided by aggregation
+    children: (doc.children || []).map((c: any) => ({ handle: c.slug || c._id?.toString?.(), title: c.name, path: c.slug ? `/product-category/${c.slug}` : `#` })),
   };
 }
 
 export async function getAllCategories() {
   const db = await connectDB();
-  const docs = await db.collection("categories").find().sort({ name: 1 }).toArray();
+
+  // Aggregate so we can include children for each category
+  const docs = await db.collection("categories").aggregate([
+    { $sort: { name: 1 } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id",
+        foreignField: "parent",
+        as: "children",
+      },
+    },
+  ]).toArray();
+
   return docs.map(mapCategory);
 }
 

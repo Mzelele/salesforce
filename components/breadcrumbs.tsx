@@ -9,7 +9,7 @@ interface Crumb {
   href?: string;
 }
 
-export function Breadcrumbs({ items, verticalOnMobile = false, centerOnMobile = false }: { items: Crumb[]; verticalOnMobile?: boolean; centerOnMobile?: boolean }) {
+export function Breadcrumbs({ items, verticalOnMobile = false, centerOnMobile = false, hideLastOnMobile = false }: { items: Crumb[]; verticalOnMobile?: boolean; centerOnMobile?: boolean; hideLastOnMobile?: boolean }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -28,24 +28,27 @@ export function Breadcrumbs({ items, verticalOnMobile = false, centerOnMobile = 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <nav aria-label="Breadcrumb" className="py-0">
-        <ol className={clsx("flex items-center gap-1 text-xs text-neutral-600", centerOnMobile ? "justify-center sm:justify-start" : "justify-start", verticalOnMobile ? "flex-col sm:flex-row sm:flex-wrap" : "flex-wrap")}>
-          {items.map((item, index) => (
-            <li key={index} className="flex items-center gap-1">
-              {index > 0 && (
-                <ChevronRight className={clsx("h-4 w-4 text-neutral-400", verticalOnMobile && "hidden sm:block")} />
-              )}
-              {item.href && index < items.length - 1 ? (
-                <Link
-                  href={item.href}
-                  className="max-w-[80px] truncate text-neutral-900 hover:underline sm:max-w-none sm:whitespace-normal"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="max-w-[100px] truncate text-neutral-900 sm:max-w-none sm:whitespace-normal">{item.label}</span>
-              )}
-            </li>
-          ))}
+                <ol className={clsx("flex items-center gap-1 text-xs text-neutral-600", centerOnMobile ? "justify-center sm:justify-start" : "justify-start", verticalOnMobile ? "flex-col sm:flex-row sm:flex-wrap" : "flex-wrap")}>
+          {items.map((item, index) => {
+            const hideOnMobile = hideLastOnMobile && index === items.length - 1;
+            return (
+              <li key={index} className={clsx("flex items-center gap-1", hideOnMobile ? "hidden sm:flex" : "flex")}>
+                {index > 0 && (
+                  <ChevronRight className={clsx("h-4 w-4 text-neutral-400", verticalOnMobile && "hidden sm:block")} />
+                )}
+                {item.href && index < items.length - 1 ? (
+                  <Link
+                    href={item.href}
+                    className="max-w-[80px] truncate text-neutral-900 hover:underline sm:max-w-none sm:whitespace-normal"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span className="max-w-[100px] truncate text-neutral-900 sm:max-w-none sm:whitespace-normal">{item.label}</span>
+                )}
+              </li>
+            );
+          })}
         </ol>
       </nav>
     </>

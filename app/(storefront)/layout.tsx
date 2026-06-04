@@ -127,13 +127,7 @@ export default async function StorefrontLayout({
         <div className="flex min-h-screen flex-col">
           <AnnouncementBar />
           <Navbar menu={menu} categories={categories} pages={footerMenu} settings={settings} />
-          <main className="flex-1" style={{ backgroundColor: "#E1F3FF" }}>
-
-
-
-
-
-
+                    <main className="flex-1 bg-neutral-50">
             {children}
           </main>
           <Footer />

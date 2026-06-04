@@ -3,6 +3,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { Collection, Menu } from "lib/sfcc/types";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, Suspense, useEffect, useState } from "react";
@@ -26,6 +28,9 @@ export default function MenuDrawer({
 
   const openDrawer = () => setIsOpen(true);
   const closeDrawer = () => setIsOpen(false);
+
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const toggleExpanded = (handle: string) => setExpanded((s) => ({ ...s, [handle]: !s[handle] }));
 
   // Close when the route changes (after a link is clicked).
   useEffect(() => {
@@ -117,25 +122,109 @@ export default function MenuDrawer({
               <div className="flex-1 overflow-y-auto">
                 {tab === "categories" ? (
                   <nav className="flex flex-col">
-                    <Link
-                      href="/shop"
-                      prefetch={true}
-                      onClick={closeDrawer}
-                      className="border-b border-neutral-100 px-4 py-3.5 text-sm font-semibold uppercase tracking-wide text-neutral-900 transition-colors hover:bg-neutral-50"
-                    >
-                      All Products
-                    </Link>
-                    {categories.map((category) => (
+                    <div className="flex items-stretch border-b border-neutral-100">
                       <Link
-                        key={category.handle}
-                        href={category.path}
+                        href="/shop"
                         prefetch={true}
                         onClick={closeDrawer}
-                        className="border-b border-neutral-100 px-4 py-3.5 text-sm font-semibold uppercase tracking-wide text-neutral-900 transition-colors hover:bg-neutral-50"
+                        className="flex-1 px-4 py-3.5 text-sm font-bold uppercase tracking-wide text-red-600 transition-colors hover:bg-neutral-50"
                       >
-                        {category.title}
+                        ALL PRODUCTS
                       </Link>
-                    ))}
+                      <span className="flex shrink-0 items-center justify-center px-4 text-neutral-300">
+                        <ChevronRight className="h-5 w-5" />
+                      </span>
+                    </div>
+                    {categories.map((category) => {
+                      const hasChildren = Array.isArray(category.children) && category.children.length > 0;
+                      const isExpanded = !!expanded[category.handle];
+                      const isActive = pathname === category.path;
+
+                      return (
+                        <div key={category.handle} className="border-b border-neutral-100">
+                          {/* Parent row */}
+                          <div className="flex items-stretch">
+                            {/* Icon + Title */}
+                            <div className="flex flex-1 items-center gap-3 px-4 py-3.5">
+                              {category.emoji ? (
+                                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-sm">
+                                  {category.emoji}
+                                </span>
+                              ) : category.image ? (
+                                <Image src={category.image} alt={category.title} width={32} height={32} className="h-8 w-8 shrink-0 rounded-full object-cover" />
+                              ) : null}
+
+                              {hasChildren ? (
+                                <button
+                                  onClick={() => toggleExpanded(category.handle)}
+                                  aria-expanded={isExpanded}
+                                  className={`truncate text-left text-sm font-bold uppercase tracking-wide transition-colors ${
+                                    isExpanded ? "text-neutral-900" : isActive ? "text-red-600" : "text-neutral-900"
+                                  }`}
+                                >
+                                  {category.title}
+                                </button>
+                              ) : (
+                                <Link
+                                  href={category.path}
+                                  prefetch={true}
+                                  onClick={closeDrawer}
+                                  className={`truncate text-sm font-bold uppercase tracking-wide transition-colors ${
+                                    isActive ? "text-red-600" : "text-neutral-900"
+                                  }`}
+                                >
+                                  {category.title}
+                                </Link>
+                              )}
+                            </div>
+
+                            {/* Chevron button */}
+                            {hasChildren ? (
+                              <button
+                                onClick={() => toggleExpanded(category.handle)}
+                                aria-expanded={isExpanded}
+                                aria-label={isExpanded ? `Collapse ${category.title}` : `Expand ${category.title}`}
+                                className={`flex shrink-0 items-center justify-center px-4 transition-colors ${
+                                  isExpanded ? "bg-red-600 text-white" : "text-neutral-400 hover:text-neutral-700"
+                                }`}
+                              >
+                                {isExpanded ? (
+                                  <ChevronDown className="h-5 w-5" />
+                                ) : (
+                                  <ChevronRight className="h-5 w-5" />
+                                )}
+                              </button>
+                            ) : (
+                              <span className="flex shrink-0 items-center justify-center px-4 text-neutral-300">
+                                <ChevronRight className="h-5 w-5" />
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Children list */}
+                          {hasChildren && isExpanded && (
+                            <div className="flex flex-col border-t border-neutral-100 bg-white">
+                              {category.children!.map((child) => {
+                                const childActive = pathname === child.path;
+                                return (
+                                  <Link
+                                    key={child.handle}
+                                    href={child.path}
+                                    prefetch={true}
+                                    onClick={closeDrawer}
+                                    className={`border-b border-neutral-100 py-3 pl-10 pr-4 text-sm transition-colors hover:bg-neutral-50 ${
+                                      childActive ? "font-semibold text-red-600" : "font-normal text-neutral-500"
+                                    }`}
+                                  >
+                                    {child.title}
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </nav>
                 ) : (
                   <nav className="flex flex-col">

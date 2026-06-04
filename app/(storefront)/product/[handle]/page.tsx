@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { Breadcrumbs } from "components/breadcrumbs";
 import { GridTileImage } from "components/grid/tile";
 import { TrackViewContent } from "components/meta-pixel/view-content";
 import { Gallery } from "components/product/gallery";
@@ -157,8 +156,13 @@ export default async function ProductPage(props: {
           currency={product.currencyCode}
         />
 
-        <div className="mx-auto w-full max-w-none px-0 pb-24 md:px-4 md:pb-6 lg:max-w-(--breakpoint-5xl)">
-          <Breadcrumbs items={breadcrumbItems} centerOnMobile />
+
+
+
+
+                <div className="mx-auto w-full max-w-none px-0 pb-24 md:px-4 md:pb-6 lg:max-w-(--breakpoint-5xl) md:pt-0">
+          {/* Spacer – maintains the margin where breadcrumbs originally lived */}
+          <div className="h-1" aria-hidden="true" />
           <ProductProvider>
 
 
@@ -183,9 +187,10 @@ export default async function ProductPage(props: {
               </div>
 
               {/* Title + Price + Variants + Actions all in one block */}
+              {/* Breadcrumbs (Home > Category) appear above the title via ProductDescription */}
               <div className="bg-white px-3 pt-1.5 pb-3 border-t border-neutral-100">
                 <Suspense fallback={null}>
-                  <ProductDescription product={product} compact />
+                  <ProductDescription product={product} compact breadcrumbs={breadcrumbItems} />
                 </Suspense>
                 <div className="mt-2.5">
                   <Suspense fallback={null}>
@@ -204,13 +209,6 @@ export default async function ProductPage(props: {
 
 
 
-            <div className="hidden lg:grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] lg:auto-rows-[minmax(0,1fr)] lg:items-stretch">
-
-
-              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
-                <div className="flex-1 p-3 md:p-4">
-                  <Suspense
-                    fallback={
 
 
 
@@ -222,32 +220,6 @@ export default async function ProductPage(props: {
 
 
 
-                      <div className="relative aspect-square h-full max-h-[400px] w-full overflow-hidden rounded-xl bg-neutral-100" />
-                    }
-                  >
-                    <Gallery
-                      images={product.images.slice(0, 5).map((image: Image) => ({
-                        src: image.url,
-                        altText: image.altText,
-                      }))}
-                    />
-                  </Suspense>
-                </div>
-              </div>
-
-
-
-
-
-
-
-              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
-                <div className="flex-1 p-4 md:p-5">
-                  <Suspense fallback={null}>
-                    <ProductDescription product={product} />
-                  </Suspense>
-                </div>
-              </div>
 
 
 
@@ -259,24 +231,424 @@ export default async function ProductPage(props: {
 
 
 
-              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm h-full flex flex-col overflow-hidden">
-                <div className="flex-1 p-4 md:p-5">
-                  <Suspense fallback={null}>
-                    <ProductActions
-                      product={product}
-                      whatsappPhone={settings.whatsappPhone || settings.storePhone}
-                      storePhone={settings.storePhone}
-                    />
-                  </Suspense>
-                </div>
-              </div>
-            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div className="hidden lg:grid gap-4 mt-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)_minmax(260px,0.72fr)] items-start">
+
+
+                                                                                                              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
+                                                                                                                <div className="p-3 md:p-4">
+                                                                                                                  <Suspense
+                                                                                                                    fallback={
+                                                                                                                      <div className="relative aspect-square h-full max-h-[400px] w-full overflow-hidden rounded-xl bg-neutral-100" />
+                                                                                                                    }
+                                                                                                                  >
+                                                                                                                    <Gallery
+                                                                                                                      images={product.images.slice(0, 5).map((image: Image) => ({
+                                                                                                                        src: image.url,
+                                                                                                                        altText: image.altText,
+                                                                                                                      }))}
+                                                                                                                    />
+                                                                                                                  </Suspense>
+                                                                                                                </div>
+                                                                                                              </div>
+
+                                                                                                              {/* Second column: breadcrumbs appear above the title via ProductDescription */}
+
+                                                                                                              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden self-start">
+                                                                                                                <div className="p-4 md:p-5 overflow-y-auto">
+                                                                                                                  <Suspense fallback={null}>
+                                                                                                                    <ProductDescription product={product} breadcrumbs={breadcrumbItems} />
+                                                                                                                  </Suspense>
+                                                                                                                </div>
+                                                                                                              </div>
+
+
+                                                                                                              <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
+                                                                                                                <div className="p-4 md:p-5">
+                                                                                                                  <Suspense fallback={null}>
+                                                                                                                    <ProductActions
+                                                                                                                      product={product}
+                                                                                                                      whatsappPhone={settings.whatsappPhone || settings.storePhone}
+                                                                                                                      storePhone={settings.storePhone}
+                                                                                                                    />
+                                                                                                                  </Suspense>
+                                                                                                                </div>
+                                                                                                              </div>
+                                                                                                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           </ProductProvider>
           {product.descriptionHtml ? (
 
 
-            <div className="mx-3 mt-3 mb-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm md:mx-0 md:mt-6 md:mb-6 md:p-8">
+
+
+            <div className="mt-3 mb-4 rounded-none border border-neutral-200 bg-white p-4 shadow-sm md:mx-0 md:mt-6 md:mb-6 md:p-8 md:rounded-2xl">
               <h2 className="mb-2 text-lg font-bold text-neutral-900 md:mb-4 md:text-2xl">Product Description</h2>
               <Prose
                 className="text-sm leading-relaxed text-neutral-700"
@@ -319,7 +691,7 @@ async function RelatedProducts({
   return (
     <div className="mx-3 mt-4 mb-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:mx-0 md:mt-6 md:mb-6 md:p-8">
       <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:mb-6">Related Products</h2>
-      <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {items.map((product: any) => (
           <li key={product.handle} className="aspect-square">
             <Link

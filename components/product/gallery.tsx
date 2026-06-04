@@ -2,7 +2,6 @@
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { GridTileImage } from "components/grid/tile";
 import { useProduct, useUpdateURL } from "components/product/product-context";
 import Image from "next/image";
 import { useRef } from "react";
@@ -54,14 +53,19 @@ export function Gallery({
                         updateURL(newState);
                       }}
                       aria-label="Select product image"
-                      className="h-full w-full"
+                      className={clsx(
+                        "relative h-full w-full overflow-hidden rounded-lg border-2 transition-all",
+                        isActive
+                          ? "border-blue-500 ring-1 ring-blue-500"
+                          : "border-neutral-200 hover:border-neutral-400",
+                      )}
                     >
-                      <GridTileImage
+                      <Image
                         alt={image.altText}
                         src={image.src}
-                        width={80}
-                        height={80}
-                        active={isActive}
+                        fill
+                        sizes="80px"
+                        className="object-cover"
                       />
                     </button>
                   </li>

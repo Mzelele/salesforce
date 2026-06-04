@@ -25,33 +25,39 @@ async function detectCategory(text: string) {
   try {
     const db = await connectDB();
     const categories = await db.collection("categories").find().toArray();
-    if (!categories.length) return null;
+    if (!categories.length) return [];
     const normalized = (text || "").toLowerCase();
+    const matched: string[] = [];
 
-    // exact or whole-word matches against name or slug, also match against a `keywords` field if present
     for (const cat of categories) {
       const name = (cat.name || "").toLowerCase();
       const slug = (cat.slug || "").toLowerCase();
 
-      // match name as whole word or as substring in longer names
       const nameRegex = new RegExp("\\b" + name.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&") + "\\b", "i");
-      if (name && nameRegex.test(normalized)) return cat._id.toString();
+      if (name && nameRegex.test(normalized)) {
+        matched.push(cat._id.toString());
+        continue;
+      }
 
-      if (slug && normalized.includes(slug)) return cat._id.toString();
+      if (slug && normalized.includes(slug)) {
+        if (!matched.includes(cat._id.toString())) matched.push(cat._id.toString());
+        continue;
+      }
 
-      // support a keywords field if categories store synonyms
       const keywords = Array.isArray(cat.keywords) ? cat.keywords : (cat.keywords ? String(cat.keywords).split(",") : []);
       for (const kw of keywords) {
         const k = (kw || "").toLowerCase().trim();
         if (!k) continue;
         const kwRegex = new RegExp("\\b" + k.replace(/[.*+?^${}()|[\\]\\]\\\\]/g, "\\$&") + "\\b", "i");
-        if (kwRegex.test(normalized) || normalized.includes(k)) return cat._id.toString();
+        if (kwRegex.test(normalized) || normalized.includes(k)) {
+          if (!matched.includes(cat._id.toString())) matched.push(cat._id.toString());
+        }
       }
     }
 
-    return null;
+    return matched;
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -76,8 +82,21 @@ export async function GET(req: NextRequest) {
 
     const filter: any = {};
     if (status) filter.status = status;
-    if (category) {
-      try { filter.category = new ObjectId(category); } catch { filter.category = category; }
+        if (category) {
+      try {
+        const catId = new ObjectId(category);
+        filter.$or = [
+          { categories: catId },
+          { categories: category },
+          { category: catId },
+          { category: category },
+        ];
+      } catch {
+        filter.$or = [
+          { categories: category },
+          { category: category },
+        ];
+      }
     }
     if (type) filter.type = type;
     if (search) {
@@ -104,17 +123,39 @@ export async function GET(req: NextRequest) {
         .toArray(),
     ]);
 
-    // Populate category names
-    const categoryIds = [...new Set(products.map((p) => p.category?.toString()).filter(Boolean))];
-    const categories = categoryIds.length
-      ? await db.collection("categories").find({ _id: { $in: categoryIds.map((id) => { try { const { ObjectId } = require("mongodb"); return new ObjectId(id); } catch { return id; } }) } }).toArray()
+        // Populate category names - support both old `category` (single) and new `categories` (array)
+    const allCatRefs = products.flatMap((p) => {
+      const refs: string[] = [];
+      if (Array.isArray(p.categories)) {
+        for (const c of p.categories) {
+          if (c) refs.push(c.toString());
+        }
+      } else if (p.category) {
+        refs.push(p.category.toString());
+      }
+      return refs;
+    });
+    const uniqueCatIds = [...new Set(allCatRefs.filter(Boolean))];
+    const catDocs = uniqueCatIds.length
+      ? await db.collection("categories").find({ _id: { $in: uniqueCatIds.map((id) => { try { return new ObjectId(id); } catch { return id; } }) } }).toArray()
       : [];
-    const catMap = Object.fromEntries(categories.map((c) => [c._id.toString(), { _id: c._id, name: c.name }]));
+    const catMap = Object.fromEntries(catDocs.map((c) => [c._id.toString(), { _id: c._id, name: c.name }]));
 
-    const populated = products.map((p) => ({
-      ...p,
-      category: p.category ? catMap[p.category.toString()] || p.category : null,
-    }));
+    const populated = products.map((p) => {
+      const p2 = { ...p };
+      // Map new categories array
+      if (Array.isArray(p2.categories)) {
+        p2.categories = p2.categories.map((c: any) => {
+          const id = c?.toString?.() || c;
+          return catMap[id] || c;
+        });
+      }
+      // Map old single category
+      if (p2.category) {
+        p2.category = catMap[p2.category.toString()] || p2.category;
+      }
+      return p2;
+    });
 
     const counts = statusCounts.reduce(
       (acc, item) => ({ ...acc, [item._id || "draft"]: item.count }),
@@ -136,15 +177,30 @@ export async function POST(req: NextRequest) {
       const detectedBrand = await detectBrand(body.name);
       if (detectedBrand) body.brand = detectedBrand;
 
-      // Attempt to detect category from the name/description when category isn't provided
-      if (!body.category) {
-        const text = `${body.name || ""} ${body.description || ""}`.trim();
-        const detectedCategory = await detectCategory(text);
-        if (detectedCategory) body.category = detectedCategory; // keep as string id; will be converted to ObjectId below
+      // Auto-detect categories from the product title/description
+      const text = `${body.name || ""} ${body.description || ""}`.trim();
+      const detectedCategories = await detectCategory(text);
+      
+      // Merge: if user manually selected categories, merge with detected
+      const manualCategories = Array.isArray(body.categories) ? body.categories : [];
+      if (body.category && !manualCategories.includes(body.category)) {
+        manualCategories.push(body.category);
       }
-    }
-    if (body.category) {
-      body.category = new ObjectId(body.category);
+      delete body.category;
+      
+      // Combine manual and detected, convert to ObjectIds
+      const allCategoryIds = [...new Set([...manualCategories, ...detectedCategories])];
+      body.categories = allCategoryIds.map((id: string) => new ObjectId(id));
+    } else {
+      // Handle existing single category field
+      if (body.category) {
+        body.categories = [new ObjectId(body.category)];
+        delete body.category;
+      } else if (Array.isArray(body.categories)) {
+        body.categories = body.categories.map((id: string) => new ObjectId(id));
+      } else {
+        body.categories = [];
+      }
     }
     const now = new Date();
     const toInsert = { ...body, createdAt: now, updatedAt: now };

@@ -5,24 +5,24 @@ import RichTextEditor from "@/components/admin/rich-text-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import clsx from "clsx";
@@ -61,7 +61,7 @@ interface ProductFormData {
   stock: number;
   images: string[];
   featuredImage?: string;
-  category: string;
+  categories: string[];
   variants: Variant[];
   defaultVariant: string;
 }
@@ -69,6 +69,8 @@ interface ProductFormData {
 export default function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categorySearch, setCategorySearch] = useState("");
+  const [categoryOpen, setCategoryOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("variable");
@@ -86,7 +88,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
     stock: 1000,
     images: [],
     featuredImage: undefined,
-    category: "",
+    categories: [],
     variants: [],
     defaultVariant: "",
   });
@@ -100,6 +102,10 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const autoDraftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoDraftSaving = useRef(false);
   const hasSubmitted = useRef(false);
+
+  const filteredCategories = categories.filter((c) =>
+    c.name.toLowerCase().includes(categorySearch.toLowerCase())
+  );
 
   const handleListingInsert = (title: string, highlights: string, descriptionHtml: string) => {
     setForm((prev) => ({
@@ -152,7 +158,11 @@ export default function ProductForm({ productId }: { productId?: string }) {
             stock: data.stock || 0,
             images: data.images || [],
             featuredImage: data.featuredImage,
-            category: data.category?._id?.toString() || "",
+            categories: Array.isArray(data.categories)
+              ? data.categories.map((c: any) => c._id?.toString() || c.toString())
+              : data.category
+                ? [data.category._id?.toString() || data.category.toString()]
+                : [],
             variants: data.variants || [],
             defaultVariant: data.defaultVariant || "",
           });
@@ -179,7 +189,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         form.description.trim() ||
         form.productHighlights.trim() ||
         form.sku.trim() ||
-        form.category ||
+        (Array.isArray(form.categories) && form.categories.length > 0) ||
         form.images.length ||
         form.price > 0 ||
         form.comparePrice > 0 ||
@@ -187,11 +197,17 @@ export default function ProductForm({ productId }: { productId?: string }) {
         form.variants.length,
     );
 
-  const buildPayload = (statusOverride?: ProductFormData["status"]) => ({
-    ...form,
-    status: statusOverride || form.status,
-    type: activeTab as "simple" | "variable",
-  });
+  const buildPayload = (statusOverride?: ProductFormData["status"]) => {
+    const payload = {
+      ...form,
+      status: statusOverride || form.status,
+      type: activeTab as "simple" | "variable",
+      categories: form.categories,
+    };
+    // Remove old single-category field
+    delete (payload as any).category;
+    return payload;
+  };
 
   useEffect(() => {
     if (productId || hasSubmitted.current || !hasMeaningfulProductContent()) return;
@@ -483,14 +499,53 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={form.category} onValueChange={(v) => setForm((p) => ({ ...p, category: v }))}>
-              <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <div className="relative">
+                <Input
+                  placeholder="Search categories..."
+                  value={categorySearch}
+                  onChange={(e) => setCategorySearch(e.target.value)}
+                  onFocus={() => setCategoryOpen(true)}
+                  onBlur={() => setTimeout(() => setCategoryOpen(false), 200)}
+                  className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
+                />
+                {categoryOpen && (
+                  <div className="absolute z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto">
+                    {filteredCategories.length === 0 ? (
+                      <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
+                    ) : (
+                      filteredCategories.map((c) => (
+                      <button
+                        key={c._id}
+                        type="button"
+                        onMouseDown={() => {
+                          setForm((p) => {
+                            const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                            const idx = current.indexOf(c._id);
+                            if (idx >= 0) {
+                              current.splice(idx, 1);
+                            } else {
+                              current.push(c._id);
+                            }
+                            return { ...p, categories: current };
+                          });
+                          setCategoryOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
+                          (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
+                            ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                            : "text-neutral-700 dark:text-neutral-300"
+                        }`}
+                      >
+                        {c.name}
+                        {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
+                          <span className="ml-2 text-blue-500">✓</span>
+                        )}
+                      </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
           </div>
           </div>
 
@@ -592,14 +647,53 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={form.category} onValueChange={(v) => setForm((p) => ({ ...p, category: v }))}>
-              <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <div className="relative">
+                <Input
+                  placeholder="Search categories..."
+                  value={categorySearch}
+                  onChange={(e) => setCategorySearch(e.target.value)}
+                  onFocus={() => setCategoryOpen(true)}
+                  onBlur={() => setTimeout(() => setCategoryOpen(false), 200)}
+                  className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
+                />
+                {categoryOpen && (
+                  <div className="absolute z-50 mt-1 w-full rounded-md border border-neutral-200 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800 max-h-[220px] overflow-y-auto">
+                    {filteredCategories.length === 0 ? (
+                      <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
+                    ) : (
+                      filteredCategories.map((c) => (
+                      <button
+                        key={c._id}
+                        type="button"
+                        onMouseDown={() => {
+                          setForm((p) => {
+                            const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                            const idx = current.indexOf(c._id);
+                            if (idx >= 0) {
+                              current.splice(idx, 1);
+                            } else {
+                              current.push(c._id);
+                            }
+                            return { ...p, categories: current };
+                          });
+                          setCategoryOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
+                          (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
+                            ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                            : "text-neutral-700 dark:text-neutral-300"
+                        }`}
+                      >
+                        {c.name}
+                        {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
+                          <span className="ml-2 text-blue-500">✓</span>
+                        )}
+                      </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
           </div>
           </div>
 
