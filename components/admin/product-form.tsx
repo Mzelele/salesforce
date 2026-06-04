@@ -71,6 +71,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categorySearch, setCategorySearch] = useState("");
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("variable");
@@ -106,6 +107,25 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const filteredCategories = categories.filter((c) =>
     c.name.toLowerCase().includes(categorySearch.toLowerCase())
   );
+
+  // Close category dropdown on outside click
+  useEffect(() => {
+    if (!categoryOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) {
+        setCategoryOpen(false);
+      }
+    };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCategoryOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [categoryOpen]);
 
   const handleListingInsert = (title: string, highlights: string, descriptionHtml: string) => {
     setForm((prev) => ({
@@ -499,13 +519,12 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <div className="relative">
+              <div className="relative" ref={categoryRef}>
                 <Input
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
                   onFocus={() => setCategoryOpen(true)}
-                  onBlur={() => setTimeout(() => setCategoryOpen(false), 200)}
                   className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
                 />
                 {categoryOpen && (
@@ -514,33 +533,33 @@ export default function ProductForm({ productId }: { productId?: string }) {
                       <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
                     ) : (
                       filteredCategories.map((c) => (
-                      <button
-                        key={c._id}
-                        type="button"
-                        onMouseDown={() => {
-                          setForm((p) => {
-                            const current = Array.isArray(p.categories) ? [...p.categories] : [];
-                            const idx = current.indexOf(c._id);
-                            if (idx >= 0) {
-                              current.splice(idx, 1);
-                            } else {
-                              current.push(c._id);
-                            }
-                            return { ...p, categories: current };
-                          });
-                          setCategoryOpen(false);
-                        }}
-                        className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
-                          (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
-                            ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
-                            : "text-neutral-700 dark:text-neutral-300"
-                        }`}
-                      >
-                        {c.name}
-                        {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
-                          <span className="ml-2 text-blue-500">✓</span>
-                        )}
-                      </button>
+                        <button
+                          key={c._id}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setForm((p) => {
+                              const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                              const idx = current.indexOf(c._id);
+                              if (idx >= 0) {
+                                current.splice(idx, 1);
+                              } else {
+                                current.push(c._id);
+                              }
+                              return { ...p, categories: current };
+                            });
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
+                            (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
+                              ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                              : "text-neutral-700 dark:text-neutral-300"
+                          }`}
+                        >
+                          {c.name}
+                          {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
+                            <span className="ml-2 text-blue-500">✓</span>
+                          )}
+                        </button>
                       ))
                     )}
                   </div>
@@ -647,13 +666,12 @@ export default function ProductForm({ productId }: { productId?: string }) {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <div className="relative">
+              <div className="relative" ref={categoryRef}>
                 <Input
                   placeholder="Search categories..."
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
                   onFocus={() => setCategoryOpen(true)}
-                  onBlur={() => setTimeout(() => setCategoryOpen(false), 200)}
                   className="dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700"
                 />
                 {categoryOpen && (
@@ -662,33 +680,33 @@ export default function ProductForm({ productId }: { productId?: string }) {
                       <div className="px-3 py-2 text-sm text-neutral-400 dark:text-neutral-500">No categories found</div>
                     ) : (
                       filteredCategories.map((c) => (
-                      <button
-                        key={c._id}
-                        type="button"
-                        onMouseDown={() => {
-                          setForm((p) => {
-                            const current = Array.isArray(p.categories) ? [...p.categories] : [];
-                            const idx = current.indexOf(c._id);
-                            if (idx >= 0) {
-                              current.splice(idx, 1);
-                            } else {
-                              current.push(c._id);
-                            }
-                            return { ...p, categories: current };
-                          });
-                          setCategoryOpen(false);
-                        }}
-                        className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
-                          (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
-                            ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
-                            : "text-neutral-700 dark:text-neutral-300"
-                        }`}
-                      >
-                        {c.name}
-                        {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
-                          <span className="ml-2 text-blue-500">✓</span>
-                        )}
-                      </button>
+                        <button
+                          key={c._id}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setForm((p) => {
+                              const current = Array.isArray(p.categories) ? [...p.categories] : [];
+                              const idx = current.indexOf(c._id);
+                              if (idx >= 0) {
+                                current.splice(idx, 1);
+                              } else {
+                                current.push(c._id);
+                              }
+                              return { ...p, categories: current };
+                            });
+                          }}
+                          className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-700 ${
+                            (Array.isArray(form.categories) ? form.categories : []).includes(c._id)
+                              ? "bg-neutral-100 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+                              : "text-neutral-700 dark:text-neutral-300"
+                          }`}
+                        >
+                          {c.name}
+                          {(Array.isArray(form.categories) ? form.categories : []).includes(c._id) && (
+                            <span className="ml-2 text-blue-500">✓</span>
+                          )}
+                        </button>
                       ))
                     )}
                   </div>

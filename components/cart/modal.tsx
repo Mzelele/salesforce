@@ -275,7 +275,6 @@ export default function CartModal({ navbarDark }: { navbarDark?: boolean }) {
                         currencyCode={cart.cost.totalAmount.currencyCode}
                       />
                     </div>
-                    <p className="mt-0.5 text-[11px] text-neutral-400">VAT included</p>
                     <div className="my-4 border-t border-neutral-200" />
                     <Link
                       href="/checkout"
